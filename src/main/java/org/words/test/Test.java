@@ -16,7 +16,7 @@ public class Test {
         SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        session.save( new Sentence( "First sentence!", "?????" ) );
+        session.save( new Sentence( "First sentence!", "第一个句子" ) );
         session.getTransaction().commit();
         session.close();
 

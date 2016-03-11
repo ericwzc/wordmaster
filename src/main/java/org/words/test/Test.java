@@ -2,7 +2,7 @@ package org.words.test;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.words.hbm.Event;
+import org.words.hbm.Sentence;
 import org.words.utils.HibernateUtils;
 
 import java.util.Date;
@@ -16,19 +16,19 @@ public class Test {
         SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        session.save( new Event( "Our very first event!", new Date() ) );
-        session.save( new Event( "A follow up event", new Date() ) );
+        session.save( new Sentence( "First sentence!", "?????" ) );
         session.getTransaction().commit();
         session.close();
 
         // now lets pull events from the database and list them
         session = sessionFactory.openSession();
         session.beginTransaction();
-        List result = session.createQuery( "from Event" ).list();
-        for ( Event event : (List<Event>) result ) {
-            System.out.println( "Event (" + event.getDate() + ") : " + event.getTitle() );
+        List<Sentence> result = session.createQuery( "from Sentence" ).list();
+        for (  Sentence sentence :  result ) {
+            System.out.println( sentence );
         }
         session.getTransaction().commit();
         session.close();
+        sessionFactory.close();
     }
 }

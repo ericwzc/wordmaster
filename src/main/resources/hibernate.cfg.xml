@@ -52,7 +52,7 @@
         <!-- Drop and re-create the database schema on startup -->
         <property name="hbm2ddl.auto">create</property>
 
-        <mapping resource="Event.hbm.xml"/>
+        <mapping resource="Word.hbm.xml"/>
 
     </session-factory>
 

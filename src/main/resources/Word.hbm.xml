@@ -30,12 +30,12 @@
 
 <hibernate-mapping package="org.words.hbm">
 
-    <class name="org.words.hbm.Event" table="EVENTS">
-        <id name="id" column="EVENT_ID">
-            <generator class="increment"/>
+    <class name="org.words.hbm.Sentence" table="SENTENCES">
+        <id name="id" column="SENTENCE_ID">
+            <generator class="uuid"/>
         </id>
-        <property name="date" type="timestamp" column="EVENT_DATE"/>
-        <property name="title"/>
+        <property name="english" type="string"/>
+        <property name="chinese" type="string"/>
     </class>
 
 </hibernate-mapping>

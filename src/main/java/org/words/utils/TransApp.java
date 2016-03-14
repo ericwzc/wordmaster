@@ -1,5 +1,3 @@
-package com.schenker.training2.swing;
-
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -7,8 +5,8 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 
-import com.schenker.training2.net.WordMaster;
-import com.schenker.training2.pojo.Sentence;
+import WordMaster;
+import Sentence;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

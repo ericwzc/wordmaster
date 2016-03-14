@@ -1,14 +1,9 @@
 /**
- * Copyright © DB Schenker. All rights reserved.
- *
  * @Title:Sentence.java
- * @Project:training2
- * @Package:com.schenker.training2.pojo
  * @author:lixu
  * @date:Mar 10, 2016  5:28:49 PM
  * @version:V1.0 
  */
-package com.schenker.training2.pojo;
 
 import java.io.Serializable;
 

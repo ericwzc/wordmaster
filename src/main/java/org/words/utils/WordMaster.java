@@ -1,14 +1,9 @@
 /**
- * Copyright © DB Schenker. All rights reserved.
- *
  * @Title:WordCilpper.java
- * @Project:TestSession
- * @Package:com.schenker.testsession.net
- * @author:eric
+ * @author:eric and lily
  * @date:Mar 8, 2016  3:18:17 PM
  * @version:V1.0 
  */
-package com.schenker.training2.net;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -39,7 +34,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.schenker.training2.pojo.Sentence;
+import Sentence;
 
 /**
  * @ClassName: WordCilpper

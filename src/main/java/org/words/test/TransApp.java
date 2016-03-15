@@ -1,12 +1,12 @@
+package org.words.test;
+
+import org.words.utils.SentenceTmp;
+
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
-import javax.swing.JTextField;
-
-import WordMaster;
-import Sentence;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -61,7 +61,7 @@ public class TransApp {
 		originalLabel.setBounds(30, 5, 90, 20);	
 		frame.getContentPane().add(originalLabel);
 		
-		JTextArea originalArea = new JTextArea();
+		final JTextArea originalArea = new JTextArea();
 		originalArea.setBounds(20, 25, 340, 80);
 		originalArea.setLineWrap(true);		//change line auto 
 		originalArea.setWrapStyleWord(true);		//make word completely
@@ -71,7 +71,7 @@ public class TransApp {
 		translatedLabel.setBounds(30, 115, 100, 20);
 		frame.getContentPane().add(translatedLabel);
 		
-		JTextArea translatedArea = new JTextArea();
+		final JTextArea translatedArea = new JTextArea();
 		translatedArea.setBounds(20, 135, 340, 80);
 		translatedArea.setLineWrap(true);
 		translatedArea.setWrapStyleWord(true);
@@ -81,7 +81,7 @@ public class TransApp {
 		beforeButton.setBounds(195, 226, 45, 25);
 		frame.getContentPane().add(beforeButton);
 		
-		JButton startButton = new JButton("Start");
+		final JButton startButton = new JButton("Start");
 		startButton.setBounds(245, 226, 65, 25);
 		frame.getContentPane().add(startButton);
 		
@@ -101,9 +101,9 @@ public class TransApp {
 			public void mouseClicked(MouseEvent e) {
 				if(startButton.getText().equals("Start")) {
 					startButton.setText("Stop");					
-					Sentence sentence;
+					SentenceTmp sentence;
 					try {
-						sentence = (Sentence)ois.readObject();
+						sentence = (SentenceTmp)ois.readObject();
 						originalArea.setText(sentence.getOriginal());
 						translatedArea.setText(sentence.getTranslate());
 						

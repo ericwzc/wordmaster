@@ -16,9 +16,10 @@ public class Test {
         SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        session.save( new Sentence( "First sentence!", "第一个句子" ) );
+        session.save( new Sentence( "First sentence!", "第一个句�?" ) );
         session.getTransaction().commit();
         session.close();
+
 
         // now lets pull events from the database and list them
         session = sessionFactory.openSession();

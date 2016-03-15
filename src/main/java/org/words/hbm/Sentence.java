@@ -36,9 +36,17 @@ public class Sentence {
         return chinese;
     }
 
+    public void setEnglish(String english) {
+        this.english = english;
+    }
+
+    public void setChinese(String chinese) {
+        this.chinese = chinese;
+    }
+
     @Override
     public String toString() {
-        return "Sentence(" + english + ":" + chinese + ")";
+        return "SentenceTmp(" + english + ":" + chinese + ")";
     }
 
     @Override

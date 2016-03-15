@@ -1,4 +1,7 @@
+package org.words.test;
+
 /**
+ *
  * @Title:WordCilpper.java
  * @author:eric and lily
  * @date:Mar 8, 2016  3:18:17 PM
@@ -33,8 +36,6 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import Sentence;
 
 /**
  * @ClassName: WordCilpper

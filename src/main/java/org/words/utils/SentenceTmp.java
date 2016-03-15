@@ -1,4 +1,4 @@
-/**
+package org.words.utils; /**
  * @Title:Sentence.java
  * @author:lixu
  * @date:Mar 10, 2016  5:28:49 PM
@@ -8,23 +8,23 @@
 import java.io.Serializable;
 
 /**
- * @ClassName: Sentence
+ * @ClassName: SentenceTmp
  * @author: lixu
  * @date: Mar 10, 2016 5:28:49 PM
  */
 /**
- * @ClassName: Sentence
+ * @ClassName: SentenceTmp
  * @author: lixu
  * @date: Mar 11, 2016 9:38:31 AM
  */
-public class Sentence implements Serializable {
+public class SentenceTmp implements Serializable { //TODO use sentence from hbm package when dao is ready
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String word;
 	private String original;
 	private String translate;
 	
-	public Sentence() {}
+	public SentenceTmp() {}
 
 	public int getId() {
 		return id;
@@ -55,7 +55,7 @@ public class Sentence implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Sentence [id=" + id +"\tword=" + word + "\toriginal=" + original + "\ttranslate=" + translate + "]";
+		return "SentenceTmp [id=" + id +"\tword=" + word + "\toriginal=" + original + "\ttranslate=" + translate + "]";
 	}
 	
 }

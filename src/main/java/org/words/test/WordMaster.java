@@ -2,7 +2,7 @@ package org.words.test;
 
 /**
  *
- * @Title:WordCilpper.java
+ * @Title:WordMaster.java
  * @author:eric and lily
  * @date:Mar 8, 2016  3:18:17 PM
  * @version:V1.0 
@@ -37,32 +37,28 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * @ClassName: WordCilpper
- * @author: Eric
- * @date: Mar 8, 2016 3:18:17 PM
- */
+
 public class WordMaster {
     private static final String UTF_8 = "UTF-8";
     private static final byte[] NL = "\n".getBytes(Charset.forName(UTF_8));
     private static final Pattern PATTERN = Pattern.compile("^.*<p>(.*)</p>.*$");
     
-	private static Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxy2.de.signintra.com", 80));
-
-	private static Pattern letterPattern = Pattern.compile("<li class=\"currentpage\"><span>(.*?)</span></li>");
-	private static Pattern pagePattern = Pattern.compile("<li class=\"activepage\"><span>(.*?)</span></li>");
-	private static Pattern aPattern = Pattern.compile("<li>.*?<a href=\"http://www.*?\">(.*?)</a></li>");
-	private static Pattern wordPattern = Pattern.compile("<a href=\"http://www.*?\" title=\".*?\">(.*?)</a>");
-
-	private static int wordsNum = 0;
-	private static BufferedWriter bw = null;
+    private static Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxy2.de.signintra.com", 80));
+	
+    private static Pattern letterPattern = Pattern.compile("<li class=\"currentpage\"><span>(.*?)</span></li>");
+    private static Pattern pagePattern = Pattern.compile("<li class=\"activepage\"><span>(.*?)</span></li>");
+    private static Pattern aPattern = Pattern.compile("<li>.*?<a href=\"http://www.*?\">(.*?)</a></li>");
+    private static Pattern wordPattern = Pattern.compile("<a href=\"http://www.*?\" title=\".*?\">(.*?)</a>");
+	
+    private static int wordsNum = 0;
+    private static BufferedWriter bw = null;
     private ObjectOutputStream oos = null;
 	
 	public WordMaster(String fileName) {
 		BufferedReader br = null;
 		try { 
-			//bw = new BufferedWriter(new FileWriter(fileName));
-			//fetchWords("A-B", 1);
+			bw = new BufferedWriter(new FileWriter(fileName));
+			fetchWords("A-B", 1);
 			
 			oos = new ObjectOutputStream(new FileOutputStream(new File("./sentences.txt")));
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)));

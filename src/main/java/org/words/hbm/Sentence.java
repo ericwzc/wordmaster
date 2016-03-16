@@ -6,8 +6,8 @@ import java.util.List;
 
 public class Sentence {
 	private String id;
-
-	private String english;
+    private int version;
+    private String english;
     private String chinese;
 
 	public Sentence() {
@@ -34,6 +34,23 @@ public class Sentence {
 
     public String getChinese() {
         return chinese;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+
+    public void setEnglish(String english) {
+        this.english = english;
+    }
+
+    public void setChinese(String chinese) {
+        this.chinese = chinese;
     }
 
     public void setEnglish(String english) {

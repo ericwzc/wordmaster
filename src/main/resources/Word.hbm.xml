@@ -6,10 +6,11 @@
 
 <hibernate-mapping package="org.words.hbm">
 
-    <class name="org.words.hbm.Sentence" table="SENTENCES" mutable="false">
+    <class name="org.words.hbm.Sentence" table="SENTENCES" mutable="true">
         <id name="id" column="SENTENCE_ID">
             <generator class="uuid"/>
         </id>
+        <version name="version" access="field" column="OBJ_VERSION" />
         <property name="english" type="string" not-null="true"/>
         <property name="chinese" type="string" not-null="true"/>
     </class>

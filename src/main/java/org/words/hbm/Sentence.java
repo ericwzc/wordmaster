@@ -9,6 +9,7 @@ public class Sentence {
     private int version;
     private String english;
     private String chinese;
+    private Word word;
 
 	public Sentence() {
 		// this form used by Hibernate
@@ -50,6 +51,14 @@ public class Sentence {
 
     public void setChinese(String chinese) {
         this.chinese = chinese;
+    }
+
+    public Word getWord() {
+        return word;
+    }
+
+    public void setWord(Word word) {
+        this.word = word;
     }
 
     @Override

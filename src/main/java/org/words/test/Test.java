@@ -33,7 +33,7 @@ public class Test {
         session.close();
     }
 
-    public synchronized void sentenceHold(Session session, Transaction tx) throws InterruptedException {
+    public synchronized void update(Session session, Transaction tx) throws InterruptedException {
         while (!lock1){
             wait();
         }
@@ -59,7 +59,7 @@ public class Test {
         Sentence sentence1 = (Sentence) session.get(Sentence.class, id);
         sentence1.setEnglish("Second ");
         System.out.println("Holding sentence id in main:" + sentence1.getVersion());
-        test.sentenceHold(session, tx);
+        test.update(session, tx);
     }
 
     public static void main(String[] args) throws InterruptedException {

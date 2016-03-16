@@ -6,13 +6,27 @@
 
 <hibernate-mapping package="org.words.hbm">
 
-    <class name="org.words.hbm.Sentence" table="SENTENCES" mutable="true">
+    <class name="Sentence" table="SENTENCES">
         <id name="id" column="SENTENCE_ID">
             <generator class="uuid"/>
         </id>
         <version name="version" access="field" column="OBJ_VERSION" />
         <property name="english" type="string" not-null="true"/>
         <property name="chinese" type="string" not-null="true"/>
+        <many-to-one name="word" column="WORD_ID" class="Sentence">
+        </many-to-one>
+    </class>
+
+    <class name="Word" table="WORDS">
+        <id name="id" column="WORD_ID">
+            <generator class="uuid"/>
+        </id>
+        <version name="version" access="field" column="OBJ_VERSION" />
+        <property name="name" type="string" not-null="true"/>
+        <set name="sentences" inverse="true">
+            <key column="WORD_ID" />
+            <one-to-many class="Sentence" />
+        </set>
     </class>
 
 </hibernate-mapping>

@@ -44,15 +44,6 @@ public class Sentence {
         this.version = version;
     }
 
-
-    public void setEnglish(String english) {
-        this.english = english;
-    }
-
-    public void setChinese(String chinese) {
-        this.chinese = chinese;
-    }
-
     public void setEnglish(String english) {
         this.english = english;
     }

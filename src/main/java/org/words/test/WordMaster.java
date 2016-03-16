@@ -8,26 +8,10 @@ package org.words.test;
  * @version:V1.0 
  */
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLConnection;
+import org.words.utils.SentenceTmp;
+
+import java.io.*;
+import java.net.*;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -217,7 +201,7 @@ public class WordMaster {
             f.mkdir();
         }
         
-        Sentence sentence = new Sentence();
+        SentenceTmp sentence = new SentenceTmp();
     	
         BufferedReader br = null;
         try {
@@ -251,7 +235,7 @@ public class WordMaster {
                         if(matcher.group(1).contains("。")) {
                         	sentence.setTranslate(matcher.group(1));
                         	oos.writeObject(sentence);
-                        	sentence = new Sentence();
+                        	sentence = new SentenceTmp();
                         } else {
                         	sentence.setOriginal(matcher.group(1));
                         }

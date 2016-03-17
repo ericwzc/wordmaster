@@ -58,5 +58,24 @@ public class Task {
     public void setId(String id) {
         this.id = id;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Task task = (Task) o;
+
+        if (!deadLine.equals(task.deadLine)) return false;
+        return plan.equals(task.plan);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = deadLine.hashCode();
+        result = 31 * result + plan.hashCode();
+        return result;
+    }
 }
 

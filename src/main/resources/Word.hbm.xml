@@ -59,9 +59,9 @@
         <version name="version" type="int" access="field" column="OBJ_VERSION"/>
         <property name="deadLine" type="date" column="DEADLINE" not-null="true" />
         <many-to-one name="plan" class="Plan" column="PLAN_ID" not-null="true"/>
-        <set name="sentences">
+        <set name="sentences" table="TASK_SENTENCE">
             <key column="TASK_ID" />
-            <one-to-many class="Sentence"/>
+            <many-to-many column="SENTENCE_ID" unique="true" class="Sentence"/>
         </set>
     </class>
 

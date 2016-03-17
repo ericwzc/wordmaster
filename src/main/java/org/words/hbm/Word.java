@@ -18,6 +18,12 @@ public class Word {
     private int version;
     private String name;
 
+    public Word(){}
+
+    public Word(String name){
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

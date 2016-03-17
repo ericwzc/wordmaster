@@ -1,10 +1,14 @@
 package org.words.test;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.words.hbm.Sentence;
+import org.words.hbm.Word;
 import org.words.utils.HibernateUtils;
+
+import java.util.List;
 
 /**
  * Created by Eric on 2016/3/11.
@@ -62,17 +66,39 @@ public class Test {
         test.update(session, tx);
     }
 
+    public void testDefaultFlush(SessionFactory sessionFactory, String id) throws InterruptedException {
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+        Sentence sentence = (Sentence) session.get(Sentence.class, id);
+        sentence.setChinese("hh");
+        Query query = session.createQuery("from Sentence s where s.id = :id").setParameter("id", id); // query will trigger auto flush
+        List<Sentence> list = query.list();
+        Thread.currentThread().sleep(8000);
+        tx.commit();
+        session.close();
+    }
+
     public static void main(String[] args) throws InterruptedException {
         final Test test = new Test();
 
         final SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
-        final String id = (String) session.save(new Sentence("First sentence!", "第一个句子"));
+        Sentence sentence = new Sentence("First Sentence", "第一个句子");
+        Word word = new Word("First");
+        word.addSentence(sentence);
+        String wordID = (String) session.save(word);
         tx.commit();
         session.close();
 
-        test.mockDeleteUpdated(test, sessionFactory, id);
+        session = sessionFactory.openSession();
+        tx = session.beginTransaction();
+        session.load(word, wordID);
+        tx.commit();
+        session.close();
+
+//        test.testDefaultFlush(sessionFactory, id);
+//        test.mockDeleteUpdated(test, sessionFactory, id);
         //TODO implement mockUpdateDeleted
     }
 }

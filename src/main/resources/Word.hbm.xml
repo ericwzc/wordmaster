@@ -13,7 +13,7 @@
         <version name="version" access="field" column="OBJ_VERSION" />
         <property name="english" type="string" not-null="true"/>
         <property name="chinese" type="string" not-null="true"/>
-        <many-to-one name="word" column="WORD_ID" class="Sentence">
+        <many-to-one name="word" column="WORD_ID" class="Word" not-null="false">
         </many-to-one>
     </class>
 

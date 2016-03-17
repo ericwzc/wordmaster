@@ -33,7 +33,7 @@ public class Test {
         session.close();
     }
 
-    public synchronized void sentenceHold(Session session, Transaction tx) throws InterruptedException {
+    public synchronized void update(Session session, Transaction tx) throws InterruptedException {
         while (!lock1){
             wait();
         }
@@ -59,7 +59,7 @@ public class Test {
         Sentence sentence1 = (Sentence) session.get(Sentence.class, id);
         sentence1.setEnglish("Second ");
         System.out.println("Holding sentence id in mockDeleteUpdated:" + sentence1.getVersion());
-        test.sentenceHold(session, tx);
+        test.update(session, tx);
     }
     
     public void mockUpdateDeleted(final Test test, final SessionFactory sessionFactory, final  String id) {
@@ -73,7 +73,7 @@ public class Test {
 		        sentence1.setEnglish("Thrid ");
 		        System.out.println("Holding sentence id in mockUpdateDeleted:" + sentence1.getVersion());
 		        try {
-					test.sentenceHold(session, tx);
+					test.update(session, tx);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

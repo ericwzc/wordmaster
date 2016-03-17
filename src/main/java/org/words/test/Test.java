@@ -4,10 +4,13 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.words.hbm.Plan;
 import org.words.hbm.Sentence;
+import org.words.hbm.User;
 import org.words.hbm.Word;
 import org.words.utils.HibernateUtils;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -97,8 +100,21 @@ public class Test {
         tx.commit();
         session.close();
 
+//        test.testPlanUser(sessionFactory);
 //        test.testDefaultFlush(sessionFactory, id);
 //        test.mockDeleteUpdated(test, sessionFactory, id);
         //TODO implement mockUpdateDeleted
+    }
+
+    private void testPlanUser(SessionFactory sessionFactory) {
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+        User user = new User("eric");
+        Plan plan = new Plan(new Date(), 50);
+        user.setPlan(plan);
+        plan.setUser(user);
+        session.save(user);
+        tx.commit();
+        session.close();
     }
 }

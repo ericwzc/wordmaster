@@ -1,22 +1,22 @@
-package org.words.hbm;
+package org.words.to;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Sentence {
+public class SentenceTO extends AbstractTO {
 	private String id;
     private int version;
     private String english;
     private String chinese;
-    private Word word;
+    private WordTO word;
 
 
-	public Sentence() {
+	public SentenceTO() {
 		// this form used by Hibernate
 	}
 
-	public Sentence(String english, String chinese) {
+	public SentenceTO(String english, String chinese) {
 		// for application use, to create new events
         this.chinese = chinese;
         this.english = english;
@@ -47,24 +47,28 @@ public class Sentence {
     }
 
     public void setEnglish(String english) {
+        String oldVal = this.english;
         this.english = english;
+        changeSupport.firePropertyChange("english", oldVal, english);
     }
 
     public void setChinese(String chinese) {
+        String oldVal = this.chinese;
         this.chinese = chinese;
+        changeSupport.firePropertyChange("chinese", oldVal, chinese);
     }
 
-    public Word getWord() {
+    public WordTO getWord() {
         return word;
     }
 
-    public void setWord(Word word) {
+    public void setWord(WordTO word) {
         this.word = word;
     }
 
     @Override
     public String toString() {
-        return "Sentence(" + english + ":" + chinese + ")";
+        return "SentenceTO(" + english + ":" + chinese + ")";
     }
 
     @Override
@@ -75,9 +79,9 @@ public class Sentence {
 
     @Override
     public boolean equals(Object obj) {
-        if(!(obj instanceof Sentence))
+        if(!(obj instanceof SentenceTO))
             return false;
-        Sentence s2 = (Sentence) obj;
+        SentenceTO s2 = (SentenceTO) obj;
         List<?> list = new ArrayList<>(Arrays.asList(english, chinese));
         List<?> list2 = new ArrayList<>(Arrays.asList(s2.english, s2.chinese));
         return list.equals(list2);

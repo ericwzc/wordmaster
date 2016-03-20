@@ -1,9 +1,11 @@
 package org.words.test;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -12,6 +14,7 @@ import org.words.hbm.Plan;
 import org.words.hbm.Sentence;
 import org.words.hbm.User;
 import org.words.hbm.Word;
+import org.words.to.SentenceTO;
 import org.words.utils.HibernateUtils;
 
 /**
@@ -109,31 +112,43 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws InterruptedException {
-		final Test test = new Test();
+		Sentence sentence = new Sentence("english", "sdsd");
+        Word word = new Word("e");
+        sentence.setWord(word);
+		SentenceTO sentenceTO = new SentenceTO();
+		try {
+			BeanUtils.copyProperties(sentenceTO, sentence);
+			System.out.println(sentenceTO);
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+//		final Test test = new Test();
 
-		final SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
-		Sentence sentence = new Sentence("First Sentence", "第一个句子");
-		Word word = new Word("First");
-		word.addSentence(sentence);
-		String wordID = (String) session.save(word);
-		tx.commit();
-		session.close();
-
-		session = sessionFactory.openSession();
-		tx = session.beginTransaction();
-		Word word2 = (Word) session.get(Word.class, wordID);
-		Iterator<Sentence> iter = word2.getSentences().iterator();
-		String id = iter.next().getId();
-		tx.commit();
-		session.close();
+//		final SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
+//		Session session = sessionFactory.openSession();
+//		Transaction tx = session.beginTransaction();
+//		Sentence sentence = new Sentence("First Sentence", "第一个句子");
+//		Word word = new Word("First");
+//		word.addSentence(sentence);
+//		String wordID = (String) session.save(word);
+//		tx.commit();
+//		session.close();
+//
+//		session = sessionFactory.openSession();
+//		tx = session.beginTransaction();
+//		Word word2 = (Word) session.get(Word.class, wordID);
+//		Iterator<Sentence> iter = word2.getSentences().iterator();
+//		String id = iter.next().getId();
+//		tx.commit();
+//		session.close();
 
 		// test.testPlanUser(sessionFactory);
 		// test.testDefaultFlush(sessionFactory, id);
 		// test.mockDeleteUpdated(test, sessionFactory, id);
 		// TODO implement mockUpdateDeleted
-		test.mockUpdateDeleted(test, sessionFactory, id);
+//		test.mockUpdateDeleted(test, sessionFactory, id);
 	}
 
 	private void testPlanUser(SessionFactory sessionFactory) {

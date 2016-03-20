@@ -1,12 +1,9 @@
 package org.words.test;
 
+import org.words.gui.WordMasterView;
 import org.words.utils.SentenceTmp;
 
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
-import javax.swing.JButton;
+import javax.swing.*;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -24,12 +21,18 @@ public class TransApp {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TransApp window = new TransApp("./words.txt");
-					window.frame.setVisible(true);
-					
+                    new WordMaster("");
+//					TransApp window = new TransApp("./words.txt");
+//					window.frame.setVisible(true);
+                    JFrame frame = new JFrame("WordMaster");
+                    frame.setDefaultCloseOperation(2);
+                    JPanel jPanel = new WordMasterView();
+                    frame.add(jPanel);
+                    frame.pack();
+					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

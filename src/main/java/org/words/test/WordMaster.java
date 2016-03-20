@@ -8,6 +8,10 @@ package org.words.test;
  * @version:V1.0 
  */
 
+import org.words.dao.WordDao;
+import org.words.hbm.Sentence;
+import org.words.hbm.Word;
+import org.words.utils.HibernateUtils;
 import org.words.utils.SentenceTmp;
 
 import java.io.*;
@@ -15,9 +19,7 @@ import java.net.*;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,30 +41,33 @@ public class WordMaster {
     private ObjectOutputStream oos = null;
 	
 	public WordMaster(String fileName) {
-		BufferedReader br = null;
-		try { 
-			bw = new BufferedWriter(new FileWriter(fileName));
-			fetchWords("A-B", 1);
-			
-			oos = new ObjectOutputStream(new FileOutputStream(new File("./sentences.txt")));
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)));
-			String line = null;
-			line = choose(fileName);
+//        init();
+//        BufferedWriter bufferedWriter
+//		BufferedReader br = null;
+//		try {
+//			bw = new BufferedWriter(new FileWriter(fileName));
+////			fetchWords("A-B", 1);
+//
+//			oos = new ObjectOutputStream(new FileOutputStream(new File("./sentences.txt")));
+//			br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)));
+//			String line = null;
+//			line = choose(fileName);
+//            line = "a";
 			//for(int i = 0; i < countLines(fileName) && (line = choose(fileName)) != null; ++i) {
-				fetchSentence(true, line.trim());
+//			fetchSentence(false, line.trim());
 			//}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}finally {
-	    	try {
-	    		if(bw != null)		bw.close();
-	    		if(br != null)		br.close();
-	    	} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}finally {
+//	    	try {
+//	    		if(bw != null)		bw.close();
+//	    		if(br != null)		br.close();
+//	    	} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
 	}
    
 	private void fetchWords(String letter, int page){
@@ -73,7 +78,7 @@ public class WordMaster {
 		try {		
 			String urlString = new String("http://www.oxfordlearnersdictionaries.com/wordlist/english/oxford3000/Oxford3000_"+letter+"/?page="+page);
 			URL url = new URL(urlString);
-			URLConnection conn = url.openConnection(proxy);
+			URLConnection conn = url.openConnection();
 			br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			
 			String nextLetter = null;
@@ -167,8 +172,7 @@ public class WordMaster {
 			return count;
 		}
 	}
-	
-	  
+
 	@SuppressWarnings("finally")
 	private String choose(String fileName) {
 	     String result = null;
@@ -193,19 +197,11 @@ public class WordMaster {
 		}     
 	}
 
-    private void fetchSentence(boolean useProxy, String word) {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String fldrNm = df.format(Calendar.getInstance().getTime());
-        File f = new File(fldrNm);
-        if(!f.exists()){
-            f.mkdir();
-        }
-        
-        SentenceTmp sentence = new SentenceTmp();
-    	
+    private void fetchSentence(boolean useProxy, Word word) {
+
         BufferedReader br = null;
         try {
-            URL url = new URL("http://www.iciba.com/" + word);
+            URL url = new URL("http://www.iciba.com/" + word.getName());
             URLConnection urlConnection = null;
             if (useProxy) {
                 urlConnection = url.openConnection(proxy);
@@ -214,14 +210,13 @@ public class WordMaster {
                 urlConnection = url.openConnection();
             }
             br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), UTF_8));
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            
+
             String inputLine;
             boolean startRecord = false;
+            Sentence sentence = null;
             while ((inputLine = br.readLine()) != null) {
-                if (inputLine.contains("<section class='result-collins page-section'>")) {
+				if (inputLine.contains("<section class='result-collins page-section'>")) {
                     startRecord = true;
-//                        continue;
                 }
                 if (startRecord && inputLine.contains("</section>")) {
                     break;
@@ -229,22 +224,20 @@ public class WordMaster {
                 if (startRecord) {
                     Matcher matcher = PATTERN.matcher(inputLine);
                     if(matcher.matches()){
-                        byteArrayOutputStream.write(matcher.group(1).getBytes(Charset.forName(UTF_8)));
-                        byteArrayOutputStream.write(NL);
-                        
-                        if(matcher.group(1).contains("。")) {
-                        	sentence.setTranslate(matcher.group(1));
-                        	oos.writeObject(sentence);
-                        	sentence = new SentenceTmp();
-                        } else {
-                        	sentence.setOriginal(matcher.group(1));
+                        String txt = matcher.group(1);
+                        if(!txt.isEmpty()) {
+                            if(sentence == null){
+                                sentence = new Sentence();
+                                sentence.setEnglish(txt);
+                            }else{
+                                sentence.setChinese(txt);
+                                word.addSentence(sentence);
+                                sentence = null;
+                            }
                         }
-                         
                     }
                 }
             }
-            
-            System.out.println(byteArrayOutputStream.toString(UTF_8));
         }
         catch (UnsupportedEncodingException e) {
         }
@@ -261,7 +254,32 @@ public class WordMaster {
         }
 
     }
-    
+
+	/** Call this to load word and sentences into database **/
+    private void init(){
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(getClass().getResource("/words.txt").getFile()));
+            String line = null;
+            while((line = br.readLine()) != null){
+                Word word = new Word(line.trim());
+                fetchSentence(false, word);
+                HibernateUtils.getSessionFactory().getCurrentSession().beginTransaction();
+                new WordDao().save(word);
+                HibernateUtils.getSessionFactory().getCurrentSession().getTransaction().commit();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(br != null){
+                try {
+                    br.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+    }
+
     public void close() {
     	try {
     		if(oos != null) {
@@ -271,5 +289,4 @@ public class WordMaster {
 			e.printStackTrace();
 		}
     }
-    
 }

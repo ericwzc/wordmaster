@@ -1,21 +1,18 @@
 package org.words.test;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.words.hbm.Plan;
-import org.words.hbm.Sentence;
-import org.words.hbm.User;
-import org.words.hbm.Word;
-import org.words.to.SentenceTO;
-import org.words.utils.HibernateUtils;
+import org.words.converter.GenericConverter;
+import org.words.hbm.*;
+import org.words.to.*;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Eric on 2016/3/11.
@@ -57,7 +54,6 @@ public class Test {
 	public void mockDeleteUpdated(final Test test, final SessionFactory sessionFactory, final String id)
 			throws InterruptedException {
 		Thread t = new Thread(new Runnable() {
-			@Override
 			public void run() {
 				Session session1 = sessionFactory.openSession();
 				test.delete(session1, id);
@@ -76,7 +72,6 @@ public class Test {
 	public void mockUpdateDeleted(final Test test, final SessionFactory sessionFactory, final String id) {
 
 		Thread t = new Thread(new Runnable() {
-			@Override
 			public void run() {
 				Session session = sessionFactory.openSession();
 				Transaction tx = session.beginTransaction();
@@ -112,6 +107,17 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws InterruptedException {
+        ConvertUtils.register(new GenericConverter<Word, WordTO>(Word.class, WordTO.class), WordTO.class);
+        ConvertUtils.register(new GenericConverter<Sentence, SentenceTO>(Sentence.class, SentenceTO.class), SentenceTO.class);
+        ConvertUtils.register(new GenericConverter<Plan, PlanTO>(Plan.class, PlanTO.class), PlanTO.class);
+        ConvertUtils.register(new GenericConverter<Task, TaskTO>(Task.class, TaskTO.class), TaskTO.class);
+        ConvertUtils.register(new GenericConverter<User, UserTO>(User.class, UserTO.class), UserTO.class);
+        ConvertUtils.register(new GenericConverter<WordTO, Word>(WordTO.class, Word.class), Word.class);
+        ConvertUtils.register(new GenericConverter<SentenceTO, Sentence>(SentenceTO.class, Sentence.class), Sentence.class);
+        ConvertUtils.register(new GenericConverter<PlanTO, Plan>(PlanTO.class, Plan.class), Plan.class);
+        ConvertUtils.register(new GenericConverter<TaskTO, Task>(TaskTO.class, Task.class), Task.class);
+        ConvertUtils.register(new GenericConverter<UserTO, User>(UserTO.class, User.class), User.class);
+
 		Sentence sentence = new Sentence("english", "sdsd");
         Word word = new Word("e");
         sentence.setWord(word);
@@ -119,7 +125,10 @@ public class Test {
 		try {
 			BeanUtils.copyProperties(sentenceTO, sentence);
 			System.out.println(sentenceTO);
-		} catch (IllegalAccessException e) {
+            Sentence sentence1 = null;
+            BeanUtils.copyProperties(sentence, sentenceTO);
+            System.out.println(sentence);
+        } catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();

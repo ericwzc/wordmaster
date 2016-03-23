@@ -63,7 +63,9 @@ public class SentenceTO extends AbstractTO {
     }
 
     public void setWord(WordTO word) {
+        WordTO old = new WordTO();
         this.word = word;
+        changeSupport.firePropertyChange("word", old, word);
     }
 
     @Override

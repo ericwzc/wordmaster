@@ -1,8 +1,10 @@
 package org.words.dao;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.words.hbm.Sentence;
 import org.words.to.SentenceTO;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,15 +13,18 @@ import java.util.List;
  */
 public class SentenceDao extends BaseDao<Sentence> {
     public List<SentenceTO> getSentences(){
-        List<SentenceTO> list = new ArrayList<>();
-        list.add(new SentenceTO("sdds","dssddsds"));
-//        Sentence sentence = (Sentence) currentSession().createQuery("from Sentence s").setReadOnly(true).setMaxResults(1).uniqueResult();
-//        SentenceTO sentenceTO = new SentenceTO();
-//        try {
-//            BeanUtils.copyProperties(sentenceTO, sentence);
-//        } catch (IllegalAccessException e) {
-//        } catch (InvocationTargetException e) {
-//        }
-        return list;//TODO
+        List<Sentence> entityList = currentSession().createQuery("select s from Sentence s join fetch s.word b where b.name = 'abandon'").list();
+        List<SentenceTO> list = new ArrayList<>(entityList.size());
+
+        try {
+            for(Sentence sentence : entityList){
+                SentenceTO sentenceTO = new SentenceTO();
+                list.add(sentenceTO);
+                BeanUtils.copyProperties(sentenceTO, sentence);
+            }
+        } catch (IllegalAccessException e) {
+        } catch (InvocationTargetException e) {
+        }
+        return list;
     }
 }

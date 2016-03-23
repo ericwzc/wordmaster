@@ -7,6 +7,7 @@ import org.hibernate.Transaction;
 import org.words.hbm.Plan;
 import org.words.hbm.Sentence;
 import org.words.hbm.User;
+import org.words.hbm.Word;
 import org.words.utils.HibernateUtils;
 
 import java.util.Date;
@@ -126,12 +127,16 @@ public class Test {
         Session session = HibernateUtils.getSessionFactory().getCurrentSession();
         Transaction tx = session.beginTransaction();
 
-        List list = session.createQuery("select distinct s from Word s join fetch s.sentences where s.name = 'abandon'").list();
-        System.out.println(list.size());
+        List<Word> list = session.createQuery("select distinct s from Word s join fetch s.sentences where s.name = 'abandon'").list();
 
         tx.commit();
 
-//		final Test test = new Test();
+        System.out.println("something else");
+        for(Sentence sentence : list.get(0).getSentences()){
+            System.out.println(sentence);
+        }
+
+        //		final Test test = new Test();
 
 //		final SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
 //		Session session = sessionFactory.openSession();

@@ -12,14 +12,12 @@ import org.words.dao.WordDao;
 import org.words.hbm.Sentence;
 import org.words.hbm.Word;
 import org.words.utils.HibernateUtils;
-import org.words.utils.SentenceTmp;
 
 import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Random;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,34 +38,7 @@ public class WordMaster {
     private static BufferedWriter bw = null;
     private ObjectOutputStream oos = null;
 	
-	public WordMaster(String fileName) {
-//        init();
-//        BufferedWriter bufferedWriter
-//		BufferedReader br = null;
-//		try {
-//			bw = new BufferedWriter(new FileWriter(fileName));
-////			fetchWords("A-B", 1);
-//
-//			oos = new ObjectOutputStream(new FileOutputStream(new File("./sentences.txt")));
-//			br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)));
-//			String line = null;
-//			line = choose(fileName);
-//            line = "a";
-			//for(int i = 0; i < countLines(fileName) && (line = choose(fileName)) != null; ++i) {
-//			fetchSentence(false, line.trim());
-			//}
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}finally {
-//	    	try {
-//	    		if(bw != null)		bw.close();
-//	    		if(br != null)		br.close();
-//	    	} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
+	public WordMaster() {
 	}
    
 	private void fetchWords(String letter, int page){

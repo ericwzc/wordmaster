@@ -12,7 +12,7 @@ import java.util.Set;
  * Word Transfer Object
  @author Eric Wang
  **/
-public class WordTO extends AbstractTO {
+public class WordTO extends AbstractTO{
     private String id;
     private Set<SentenceTO> sentences = new HashSet<>();
     private int version;
@@ -29,7 +29,9 @@ public class WordTO extends AbstractTO {
     }
 
     public void setName(String name) {
+        String old = this.name;
         this.name = name;
+        changeSupport.firePropertyChange("name", old, name);
     }
 
     public String getId() {

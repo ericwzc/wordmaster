@@ -1,11 +1,11 @@
-JFDML JFormDesigner: "5.2.2.2.228" Java: "1.8.0_45" encoding: "UTF-8"
+JFDML JFormDesigner: "5.2.2.2.228" Java: "1.8.0_40" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-			"$rowSpecs": "fill:default, linegap, default:grow, linegap, default:grow, linegap, default"
-			"$columnSpecs": "center:pref:grow"
+			"$rowSpecs": "fill:default, linegap, pref, pargap, pref, pargap, pref"
+			"$columnSpecs": "default:grow"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JToolBar", new FormLayoutManager( class javax.swing.JToolBar ) ) {
@@ -40,7 +40,7 @@ new FormModel {
 				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-				"$columnSpecs": "button, labelcompgap, button"
+				"$columnSpecs": "pref:grow, labelcompgap, pref:grow, pref:grow"
 				"$rowSpecs": "default"
 			} ) {
 				name: "panel1"
@@ -51,12 +51,18 @@ new FormModel {
 					"gridX": 1
 					"gridY": 1
 				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label3"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "button2"
 					"text": ">"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 3
-					"gridY": 1
+					"gridX": 4
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridY": 7
@@ -66,15 +72,17 @@ new FormModel {
 			"location": new java.awt.Point( 0, 0 )
 			"size": new java.awt.Dimension( 400, 300 )
 		} )
-		add( new FormNonVisual( "org.words.to.SentenceTO" ) {
-			name: "sentenceTO"
-		}, new FormLayoutConstraints( null ) {
-			"location": new java.awt.Point( 425, 85 )
-		} )
 		addBindingGroup( new FormBindingGroup( class org.jdesktop.beansbinding.BindingGroup ) {
 			"name": "bindingGroup"
-			addBinding( new FormBinding( "sentenceTO", "chinese", "label1", "text" ) )
-			addBinding( new FormBinding( "sentenceTO", "english", "label2", "text" ) )
+			addBinding( new FormBinding( "this", "${sentenceTO.chinese}", "label1", "text" ) {
+				"name": "chineseLabel"
+			} )
+			addBinding( new FormBinding( "this", "${sentenceTO.english}", "label2", "text" ) {
+				"name": "englishLabel"
+			} )
+			addBinding( new FormBinding( "this", "${sentenceTO.word.name}", "label3", "text" ) {
+				"name": "wordname"
+			} )
 		} )
 	}
 }

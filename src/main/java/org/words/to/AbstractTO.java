@@ -2,7 +2,6 @@ package org.words.to;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Objects;
 
 /**
  * Created by Eric on 2016/3/20.

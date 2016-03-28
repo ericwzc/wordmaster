@@ -1,4 +1,4 @@
-package org.words.utils; /**
+package org.words.tmp; /**
  * @Title:Sentence.java
  * @author:lixu
  * @date:Mar 10, 2016  5:28:49 PM

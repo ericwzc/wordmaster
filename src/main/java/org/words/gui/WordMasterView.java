@@ -12,12 +12,13 @@ import org.jdesktop.beansbinding.BeanProperty;
 import org.jdesktop.beansbinding.BindingGroup;
 import org.jdesktop.beansbinding.Bindings;
 import org.jdesktop.beansbinding.ELProperty;
-import org.words.dao.SentenceDao;
+import org.words.factory.ServiceFactory;
+import org.words.service.TaskService;
 import org.words.to.SentenceTO;
-import org.words.utils.HibernateUtils;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -34,13 +35,11 @@ public class WordMasterView extends JPanel {
     }
 
     private void studyButtonActionPerformed(ActionEvent e) {
-        HibernateUtils.startTransaction();
         try {
-            tos = new SentenceDao().getSentences();
-            BeanUtils.copyProperties(this.sentenceTO,tos.get(idx));
-            HibernateUtils.commit();
-        }catch (Exception ex){
-            HibernateUtils.rollback();
+            tos = ServiceFactory.getServiceInstance(TaskService.class).getSentences();
+            BeanUtils.copyProperties(sentenceTO, tos.get(idx % tos.size()));
+        } catch (IllegalAccessException e1) {
+        } catch (InvocationTargetException e1) {
         }
     }
 

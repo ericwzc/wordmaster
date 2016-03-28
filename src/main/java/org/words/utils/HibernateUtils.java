@@ -15,18 +15,6 @@ public class HibernateUtils {
         private static SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
     }
 
-    public static void startTransaction(){
-        getSessionFactory().getCurrentSession().beginTransaction();
-    }
-
-    public static void commit(){
-        getSessionFactory().getCurrentSession().getTransaction().commit();
-    }
-
-    public static void rollback(){
-        getSessionFactory().getCurrentSession().getTransaction().rollback();
-    }
-
     public static SessionFactory getSessionFactory(){
         return SingletonWrapper.sessionFactory;
     }

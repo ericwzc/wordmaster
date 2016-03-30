@@ -13,8 +13,26 @@
         <version name="version" access="field" column="OBJ_VERSION" />
         <property name="english" type="string" not-null="true"/>
         <property name="chinese" type="string" not-null="true"/>
-        <many-to-one name="word" column="WORD_ID" class="Word" not-null="false">
-        </many-to-one>
+        <many-to-one name="word" class="Word" column="WORD_ID" not-null="true"/>
+        <join table="TASKS_SENTENCES">
+            <key column="SENTENCE_ID"/>
+            <many-to-one name="task" column="TASK_ID" not-null="true" />
+        </join>
+    </class>
+
+    <class name="Plan" table="PLANS">
+        <id name="id" column="PLAN_ID">
+            <generator class="uuid"/>
+        </id>
+        <version name="version" access="field" column="OBJ_VERSION" />
+        <property name="startDate" type="date" not-null="true"/>
+        <property name="number" type="int" not-null="true"/>
+        <!-- bidretional one to one -->
+        <many-to-one name="user" class="User" unique="true" not-null="true"/>
+        <set name="tasks" inverse="true" cascade="save-update, delete">
+            <key column="PLAN_ID" />
+            <one-to-many class="Task"/>
+        </set>
     </class>
 
     <class name="Word" table="WORDS">
@@ -29,26 +47,13 @@
         </set>
     </class>
 
-    <class name="Plan" table="Plans">
-        <id name="id" column="PLAN_ID">
-            <generator class="uuid"/>
-        </id>
-        <version name="version" access="field" column="OBJ_VERSION" />
-        <property name="startDate" type="date" not-null="true"/>
-        <property name="number" type="int" not-null="true"/>
-        <many-to-one name="user" class="User" unique="true" not-null="true"/>
-        <set name="tasks" inverse="true" cascade="save-update, delete">
-            <key column="PLAN_ID" />
-            <one-to-many class="Task"/>
-        </set>
-    </class>
-
     <class name="User" table="USERS">
         <id name="id" column="USER_ID">
             <generator class="uuid"/>
         </id>
         <version name="version" access="field" column="OBJ_VERSION"/>
         <property name="name" type="string" column="NAME"/>
+        <!-- bidretional one to one -->
         <one-to-one name="plan" class="Plan" property-ref="user" cascade="save-update, delete"/>
     </class>
 
@@ -59,9 +64,9 @@
         <version name="version" type="int" access="field" column="OBJ_VERSION"/>
         <property name="deadLine" type="date" column="DEADLINE" not-null="true" />
         <many-to-one name="plan" class="Plan" column="PLAN_ID" not-null="true"/>
-        <set name="sentences" table="TASK_SENTENCE">
+        <set name="sentences" cascade="save-update, delete" inverse="true">
             <key column="TASK_ID" />
-            <many-to-many column="SENTENCE_ID" unique="true" class="Sentence"/>
+            <one-to-many class="Sentence" />
         </set>
     </class>
 

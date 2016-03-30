@@ -10,6 +10,7 @@ public class Sentence {
     private String english;
     private String chinese;
     private Word word;
+    private Task task;
 
 
 	public Sentence() {
@@ -60,6 +61,14 @@ public class Sentence {
 
     public void setWord(Word word) {
         this.word = word;
+    }
+
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
     }
 
     @Override

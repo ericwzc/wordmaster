@@ -7,7 +7,6 @@ import org.hibernate.cfg.Configuration;
 /**
  * Created by Eric on 2016/3/11.
  */
-// TODO replace with spring later
 public class HibernateUtils {
     private HibernateUtils(){}
 

@@ -4,6 +4,7 @@
 
 package org.words.gui;
 
+import java.awt.event.*;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import org.apache.commons.beanutils.BeanUtils;
@@ -75,7 +76,11 @@ public class WordMasterView extends JPanel {
 
             //---- studyButton ----
             studyButton.setText("Start Learn");
-            studyButton.addActionListener(e -> studyButtonActionPerformed(e));
+            studyButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    studyButtonActionPerformed(e);
+                }
+            });
             toolBar1.add(studyButton);
             toolBar1.addSeparator();
 

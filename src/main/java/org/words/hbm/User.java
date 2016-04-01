@@ -5,6 +5,9 @@ package org.words.hbm;
  * All rights reserved
  */
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * User entity
  @author Eric Wang
@@ -12,12 +15,8 @@ package org.words.hbm;
 public class User {
     private String id;
     private String name;
-
-    private Plan oneToOne;
-
     private Integer version;
-
-    private Plan plan;
+    private Set<Plan> plans = new HashSet<>();
 
     public User() {
     }
@@ -26,12 +25,17 @@ public class User {
         this.name = name;
     }
 
-    public Plan getPlan() {
-        return plan;
+    public Set<Plan> getPlans() {
+        return plans;
     }
 
-    public void setPlan(Plan plan) {
-        this.plan = plan;
+    public void setPlans(Set<Plan> plans) {
+        this.plans = plans;
+    }
+
+    public void addPlan(Plan plan){
+        plan.setUser(this);
+        plans.add(plan);
     }
 
     public String getId() {
@@ -56,14 +60,6 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Plan getOneToOne() {
-        return oneToOne;
-    }
-
-    public void setOneToOne(Plan oneToOne) {
-        this.oneToOne = oneToOne;
     }
 }
 

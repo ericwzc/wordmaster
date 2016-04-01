@@ -15,7 +15,7 @@ import java.util.Set;
  **/
 public class Plan {
     private String id;
-    private Integer version;
+    private int version;
     private Date startDate;
     private int number;
     private User user;
@@ -27,6 +27,11 @@ public class Plan {
 
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public void addTask(Task task) {
+        task.setPlan(this);
+        tasks.add(task);
     }
 
     public Plan(Date startDate, int number) {
@@ -61,11 +66,11 @@ public class Plan {
         this.startDate = startDate;
     }
 
-    public Integer getVersion() {
+    public int getVersion() {
         return version;
     }
 
-    public void setVersion(Integer version) {
+    public void setVersion(int version) {
         this.version = version;
     }
 
@@ -75,6 +80,31 @@ public class Plan {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Plan plan = (Plan) o;
+
+        if (number != plan.number)
+            return false;
+        if (startDate != null ? !startDate.equals(plan.startDate) : plan.startDate != null)
+            return false;
+        return !(user != null ? !user.equals(plan.user) : plan.user != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = startDate != null ? startDate.hashCode() : 0;
+        result = 31 * result + number;
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        return result;
     }
 }
 

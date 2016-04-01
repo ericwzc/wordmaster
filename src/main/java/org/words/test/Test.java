@@ -7,7 +7,6 @@ import org.hibernate.Transaction;
 import org.words.hbm.Plan;
 import org.words.hbm.Sentence;
 import org.words.hbm.User;
-import org.words.hbm.Word;
 import org.words.utils.HibernateUtils;
 
 import java.util.Date;
@@ -106,6 +105,7 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws InterruptedException {
+        new Test().testPlanUser(HibernateUtils.getSessionFactory());
 //        TransApp.registerConverters();
 //
 //		Sentence sentence = new Sentence("english", "sdsd");
@@ -124,17 +124,17 @@ public class Test {
 //			e.printStackTrace();
 //		}
 
-        Session session = HibernateUtils.getSessionFactory().getCurrentSession();
-        Transaction tx = session.beginTransaction();
-
-        List<Word> list = session.createQuery("select distinct s from Word s join fetch s.sentences where s.name = 'abandon'").list();
-
-        tx.commit();
-
-        System.out.println("something else");
-        for(Sentence sentence : list.get(0).getSentences()){
-            System.out.println(sentence);
-        }
+//        Session session = HibernateUtils.getSessionFactory().getCurrentSession();
+//        Transaction tx = session.beginTransaction();
+//
+//        List<Word> list = session.createQuery("select distinct s from Word s join fetch s.sentences where s.name = 'abandon'").list();
+//
+//        tx.commit();
+//
+//        System.out.println("something else");
+//        for(Sentence sentence : list.get(0).getSentences()){
+//            System.out.println(sentence);
+//        }
 
         //		final Test test = new Test();
 
@@ -168,10 +168,17 @@ public class Test {
 		Transaction tx = session.beginTransaction();
 		User user = new User("eric");
 		Plan plan = new Plan(new Date(), 50);
-		user.setPlan(plan);
-		plan.setUser(user);
+		user.addPlan(plan);
 		session.save(user);
 		tx.commit();
 		session.close();
+
+        plan.setUser(null);
+
+        session = sessionFactory.openSession();
+        tx = session.beginTransaction();
+        plan  = (Plan) session.merge(plan);
+        tx.commit();
+        session.close();
 	}
 }

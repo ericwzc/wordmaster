@@ -60,5 +60,23 @@ public class Word {
         sentence.setWord(this);
         sentences.add(sentence);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Word word = (Word) o;
+
+        return name.equals(word.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }
 

@@ -10,12 +10,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Plan Transfer Object
+ * Plan entity
  @author Eric Wang
  **/
-public class PlanTO extends AbstractTO {
+public class PlanTO extends AbstractTO{
     private String id;
-    private Integer version;
+    private int version;
     private Date startDate;
     private int number;
     private UserTO user;
@@ -27,6 +27,11 @@ public class PlanTO extends AbstractTO {
 
     public void setTasks(Set<TaskTO> tasks) {
         this.tasks = tasks;
+    }
+
+    public void addTask(TaskTO task) {
+        task.setPlan(this);
+        tasks.add(task);
     }
 
     public PlanTO(Date startDate, int number) {
@@ -61,11 +66,11 @@ public class PlanTO extends AbstractTO {
         this.startDate = startDate;
     }
 
-    public Integer getVersion() {
+    public int getVersion() {
         return version;
     }
 
-    public void setVersion(Integer version) {
+    public void setVersion(int version) {
         this.version = version;
     }
 
@@ -75,6 +80,31 @@ public class PlanTO extends AbstractTO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        PlanTO plan = (PlanTO) o;
+
+        if (number != plan.number)
+            return false;
+        if (startDate != null ? !startDate.equals(plan.startDate) : plan.startDate != null)
+            return false;
+        return !(user != null ? !user.equals(plan.user) : plan.user != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = startDate != null ? startDate.hashCode() : 0;
+        result = 31 * result + number;
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        return result;
     }
 }
 

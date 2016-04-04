@@ -5,19 +5,18 @@ package org.words.to;
  * All rights reserved
  */
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
- * User Transfer Object
+ * User entity
  @author Eric Wang
  **/
 public class UserTO extends AbstractTO {
     private String id;
     private String name;
-
-    private PlanTO oneToOne;
-
     private Integer version;
-
-    private PlanTO plan;
+    private Set<PlanTO> plans = new HashSet<>();
 
     public UserTO() {
     }
@@ -26,12 +25,17 @@ public class UserTO extends AbstractTO {
         this.name = name;
     }
 
-    public PlanTO getPlan() {
-        return plan;
+    public Set<PlanTO> getPlans() {
+        return plans;
     }
 
-    public void setPlan(PlanTO plan) {
-        this.plan = plan;
+    public void setPlans(Set<PlanTO> plans) {
+        this.plans = plans;
+    }
+
+    public void addPlan(PlanTO plan){
+        plan.setUser(this);
+        plans.add(plan);
     }
 
     public String getId() {
@@ -56,14 +60,6 @@ public class UserTO extends AbstractTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public PlanTO getOneToOne() {
-        return oneToOne;
-    }
-
-    public void setOneToOne(PlanTO oneToOne) {
-        this.oneToOne = oneToOne;
     }
 }
 

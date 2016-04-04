@@ -4,14 +4,12 @@ package org.words.to; /**
  * All rights reserved
  */
 
-import org.words.hbm.Sentence;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Task Transfer Object
+ * Task entity
  @author Eric Wang
  **/
 public class TaskTO extends AbstractTO {
@@ -19,13 +17,13 @@ public class TaskTO extends AbstractTO {
     private int version;
     private Date deadLine;
     private PlanTO plan;
-    private Set<org.words.hbm.Sentence> sentences = new HashSet<>();
+    private Set<SentenceTO> sentences = new HashSet<>();
 
-    public Set<org.words.hbm.Sentence> getSentences() {
+    public Set<SentenceTO> getSentences() {
         return sentences;
     }
 
-    public void setSentences(Set<Sentence> sentences) {
+    public void setSentences(Set<SentenceTO> sentences) {
         this.sentences = sentences;
     }
 
@@ -59,6 +57,11 @@ public class TaskTO extends AbstractTO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void addSentence(SentenceTO sentence){
+        sentence.setTask(this);
+        sentences.add(sentence);
     }
 
     @Override

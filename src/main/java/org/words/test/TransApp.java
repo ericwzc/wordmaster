@@ -12,31 +12,31 @@ import java.io.IOException;
 
 public class TransApp {
 
-	private JFrame frame;
+    private JFrame frame;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				try {
-                    registerConverters();
-                    new WordMaster();
+    /**
+     * Launch the application.
+     */
+    public static void main(String[] args) {
+        registerConverters();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    new WordMaster().initUser();
                     JFrame frame = new JFrame("WordMaster");
                     frame.setDefaultCloseOperation(2);
                     JPanel jPanel = new WordMasterView();
                     frame.add(jPanel);
                     frame.pack();
-					frame.setVisible(true);
-				} catch (Exception e) {
-				}
-			}
-		});
-	}
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                }
+            }
+        });
+    }
 
-    //<editor-fold defaultstate="collapsed" desc="Converters">
-    public static void registerConverters(){
+    //<editor-fold desc="Converters">
+    public static void registerConverters() {
         ConvertUtils.register(new GenericConverter<Word, WordTO>(Word.class, WordTO.class), WordTO.class);
         ConvertUtils.register(new GenericConverter<Sentence, SentenceTO>(Sentence.class, SentenceTO.class), SentenceTO.class);
         ConvertUtils.register(new GenericConverter<Plan, PlanTO>(Plan.class, PlanTO.class), PlanTO.class);
@@ -50,13 +50,14 @@ public class TransApp {
     }
     //</editor-fold>
 
-	/**
-	 * Create the application.
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
-	 */
-	public TransApp() throws FileNotFoundException, IOException {
-		new WordMaster();
-	}
+    /**
+     * Create the application.
+     *
+     * @throws IOException
+     * @throws FileNotFoundException
+     */
+    public TransApp() throws FileNotFoundException, IOException {
+        new WordMaster();
+    }
 }
 

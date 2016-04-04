@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SentenceTO extends AbstractTO {
+public class SentenceTO extends AbstractTO{
 	private String id;
     private int version;
     private String english;
     private String chinese;
     private WordTO word;
+    private TaskTO task;
 
 
 	public SentenceTO() {
@@ -47,15 +48,11 @@ public class SentenceTO extends AbstractTO {
     }
 
     public void setEnglish(String english) {
-        String oldVal = this.english;
         this.english = english;
-        changeSupport.firePropertyChange("english", oldVal, english);
     }
 
     public void setChinese(String chinese) {
-        String oldVal = this.chinese;
         this.chinese = chinese;
-        changeSupport.firePropertyChange("chinese", oldVal, chinese);
     }
 
     public WordTO getWord() {
@@ -63,14 +60,20 @@ public class SentenceTO extends AbstractTO {
     }
 
     public void setWord(WordTO word) {
-        WordTO old = new WordTO();
         this.word = word;
-        changeSupport.firePropertyChange("word", old, word);
+    }
+
+    public TaskTO getTask() {
+        return task;
+    }
+
+    public void setTask(TaskTO task) {
+        this.task = task;
     }
 
     @Override
     public String toString() {
-        return "SentenceTO(" + english + ":" + chinese + ")";
+        return "Sentence(" + english + ":" + chinese + ")";
     }
 
     @Override

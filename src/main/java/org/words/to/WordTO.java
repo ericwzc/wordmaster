@@ -9,10 +9,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Word Transfer Object
+ * Word Entity
  @author Eric Wang
  **/
-public class WordTO extends AbstractTO{
+public class WordTO extends AbstractTO {
     private String id;
     private Set<SentenceTO> sentences = new HashSet<>();
     private int version;
@@ -29,9 +29,7 @@ public class WordTO extends AbstractTO{
     }
 
     public void setName(String name) {
-        String old = this.name;
         this.name = name;
-        changeSupport.firePropertyChange("name", old, name);
     }
 
     public String getId() {
@@ -64,10 +62,21 @@ public class WordTO extends AbstractTO{
     }
 
     @Override
-    public String toString() {
-        return "WordTO{" +
-                "name='" + name + '\'' +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        WordTO word = (WordTO) o;
+
+        return name.equals(word.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 }
 

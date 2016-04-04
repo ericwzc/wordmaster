@@ -78,7 +78,7 @@ public class Plan {
         return id;
     }
 
-    public void setId(String id) {
+    private void setId(String id) {
         this.id = id;
     }
 

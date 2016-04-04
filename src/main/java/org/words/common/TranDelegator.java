@@ -16,15 +16,12 @@ import java.util.concurrent.Callable;
  * Created by Eric on 2016/3/28.
  */
 public class TranDelegator {
-    private static Session session = null;
     private static Transaction transaction = null;
 
     @RuntimeType
     public static Object intercept(@SuperCall Callable<?> superMethod, @Origin Method method) throws Exception {
         boolean entry = false;
-        if (session == null) {
-            session = HibernateUtils.getSessionFactory().getCurrentSession();
-        }
+        Session session = HibernateUtils.getSessionFactory().getCurrentSession();
         if (transaction == null) {
             transaction = session.beginTransaction();
             entry = true;
@@ -37,15 +34,12 @@ public class TranDelegator {
                 return null;
             }
         } catch (Exception e) {
-            if (entry) {
-                transaction.rollback();
-            }
+            transaction.rollback();
             throw new IllegalStateException(e);
         } finally {
             if (entry) {
                 transaction.commit();
                 transaction = null;
-                session = null;
             }
         }
     }

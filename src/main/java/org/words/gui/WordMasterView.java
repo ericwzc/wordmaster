@@ -5,6 +5,7 @@
 package org.words.gui;
 
 import java.awt.event.*;
+
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import org.apache.commons.beanutils.BeanUtils;
@@ -13,7 +14,7 @@ import org.jdesktop.beansbinding.BeanProperty;
 import org.jdesktop.beansbinding.BindingGroup;
 import org.jdesktop.beansbinding.Bindings;
 import org.jdesktop.beansbinding.ELProperty;
-import org.words.factory.ServiceFactory;
+import org.words.factory.ServiceRegistry;
 import org.words.service.TaskService;
 import org.words.to.SentenceTO;
 
@@ -36,11 +37,9 @@ public class WordMasterView extends JPanel {
     }
 
     private void studyButtonActionPerformed(ActionEvent e) {
-        try {
-            tos = ServiceFactory.getServiceInstance(TaskService.class).getSentences();
-            BeanUtils.copyProperties(sentenceTO, tos.get(idx % tos.size()));
-        } catch (IllegalAccessException e1) {
-        } catch (InvocationTargetException e1) {
+        tos = ServiceRegistry.getServiceInstance(TaskService.class).getSentences();
+        if(tos.size() > 0) {
+            sentenceTO = tos.get(idx % tos.size());
         }
     }
 
@@ -52,6 +51,14 @@ public class WordMasterView extends JPanel {
         SentenceTO old = this.sentenceTO;
         this.sentenceTO = sentenceTO;
         firePropertyChange("sentenceTO", old, sentenceTO);
+    }
+
+    private void button2ActionPerformed(ActionEvent e) {
+        sentenceTO = tos.get(++idx % tos.size());
+    }
+
+    private void button1ActionPerformed(ActionEvent e) {
+        sentenceTO = tos.get((--idx + tos.size()) % tos.size());
     }
 
     private void initComponents() {
@@ -69,18 +76,14 @@ public class WordMasterView extends JPanel {
         //======== this ========
         setLayout(new FormLayout(
             "default:grow",
-            "fill:default, $lgap, 2*(pref, $pgap), pref"));
+            "fill:default, $lgap, 2*(pref:grow, $pgap), pref"));
 
         //======== toolBar1 ========
         {
 
             //---- studyButton ----
             studyButton.setText("Start Learn");
-            studyButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    studyButtonActionPerformed(e);
-                }
-            });
+            studyButton.addActionListener(e -> studyButtonActionPerformed(e));
             toolBar1.add(studyButton);
             toolBar1.addSeparator();
 
@@ -106,11 +109,13 @@ public class WordMasterView extends JPanel {
 
             //---- button1 ----
             button1.setText("<");
+            button1.addActionListener(e -> button1ActionPerformed(e));
             panel1.add(button1, CC.xy(1, 1));
             panel1.add(label3, CC.xy(3, 1, CC.CENTER, CC.DEFAULT));
 
             //---- button2 ----
             button2.setText(">");
+            button2.addActionListener(e -> button2ActionPerformed(e));
             panel1.add(button2, CC.xy(4, 1));
         }
         add(panel1, CC.xy(1, 7, CC.CENTER, CC.DEFAULT));

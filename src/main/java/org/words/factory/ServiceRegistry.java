@@ -8,8 +8,10 @@ import org.words.common.TranDelegator;
 import org.words.common.Transactional;
 import org.words.service.PlanService;
 import org.words.service.TaskService;
-import org.words.service.TaskServiceImpl;
+import org.words.service.impl.PlanServiceImpl;
+import org.words.service.impl.TaskServiceImpl;
 import org.words.service.UserService;
+import org.words.service.impl.UserServiceImpl;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,7 +20,7 @@ import java.util.Map;
 /**
  * Created by Eric on 2016/3/28.
  */
-public class ServiceFactory {
+public class ServiceRegistry {
 
     private static <T> Class<? extends T> transactionAware (Class<T> clazz){
         return new ByteBuddy().subclass(clazz).method(ElementMatchers.isAnnotatedWith(Transactional.class))
@@ -36,8 +38,8 @@ public class ServiceFactory {
 
     static {
         try {
-            userService = transactionAware(UserService.class).newInstance();
-            planService = transactionAware(PlanService.class).newInstance();
+            userService = transactionAware(UserServiceImpl.class).newInstance();
+            planService = transactionAware(PlanServiceImpl.class).newInstance();
             taskService = transactionAware(TaskServiceImpl.class).newInstance();
             registry.put(UserService.class, userService);
             registry.put(PlanService.class, planService);

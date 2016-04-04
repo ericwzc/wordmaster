@@ -8,14 +8,20 @@ package org.words.test;
  * @version:V1.0 
  */
 
+import org.h2.server.Service;
 import org.words.dao.WordDao;
+import org.words.factory.ServiceRegistry;
 import org.words.hbm.Sentence;
 import org.words.hbm.Word;
+import org.words.service.UserService;
+import org.words.to.PlanTO;
+import org.words.to.UserTO;
 import org.words.utils.HibernateUtils;
 
 import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -227,7 +233,7 @@ public class WordMaster {
     }
 
 	/** Call this to load word and sentences into database **/
-    private void init(){
+    void initWordsSentences(){
         BufferedReader br = null;
         try {
             br = new BufferedReader(new FileReader(getClass().getResource("/words.txt").getFile()));
@@ -250,6 +256,14 @@ public class WordMaster {
             }
         }
     }
+
+
+	void initUser(){
+		UserTO userTO = new UserTO("Eric");
+		PlanTO planTO = new PlanTO(new Date(), 50);
+		userTO.addPlan(planTO);
+		ServiceRegistry.getServiceInstance(UserService.class).saveUser(userTO);
+	}
 
     public void close() {
     	try {

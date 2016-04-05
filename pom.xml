@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -7,7 +8,7 @@
     <artifactId>wordmaster</artifactId>
     <version>4.3.11.Final</version>
     <packaging>jar</packaging>
-  
+
     <properties>
         <!-- Skip artifact deployment -->
         <maven.deploy.skip>true</maven.deploy.skip>
@@ -68,24 +69,24 @@
         </dependency>
 
         <dependency>
-            <groupId>net.sf.dozer</groupId>
-            <artifactId>dozer</artifactId>
-            <version>5.5.1</version>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.8.3</version>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>jgoodies</groupId>-->
-            <!--<artifactId>forms</artifactId>-->
-            <!--<version>1.0.5</version>-->
-            <!--<scope>system</scope>-->
-            <!--<systemPath>${project.basedir}/lib/jgoodies-forms.jar</systemPath>-->
+        <!--<groupId>jgoodies</groupId>-->
+        <!--<artifactId>forms</artifactId>-->
+        <!--<version>1.0.5</version>-->
+        <!--<scope>system</scope>-->
+        <!--<systemPath>${project.basedir}/lib/jgoodies-forms.jar</systemPath>-->
         <!--</dependency>-->
 
         <!--<dependency>-->
-            <!--<groupId>jgoodies</groupId>-->
-            <!--<artifactId>binding</artifactId>-->
-            <!--<version>1.0</version>-->
-            <!--<scope>system</scope>-->
-            <!--<systemPath>${project.basedir}/lib/beansbinding.jar</systemPath>-->
+        <!--<groupId>jgoodies</groupId>-->
+        <!--<artifactId>binding</artifactId>-->
+        <!--<version>1.0</version>-->
+        <!--<scope>system</scope>-->
+        <!--<systemPath>${project.basedir}/lib/beansbinding.jar</systemPath>-->
         <!--</dependency>-->
 
     </dependencies>

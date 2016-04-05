@@ -37,6 +37,6 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<SentenceTO> getSentences() {
         List<Sentence> entityList = new SentenceDao().getSentences();
-        return BeanConverters.convert(entityList, new ArrayList<SentenceTO>());
+        return BeanConverters.convert(entityList, SentenceTO.class);
     }
 }

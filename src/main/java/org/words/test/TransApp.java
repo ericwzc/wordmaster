@@ -2,6 +2,7 @@ package org.words.test;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.words.converter.GenericConverter;
+import org.words.converter.SetConverter;
 import org.words.gui.WordMasterView;
 import org.words.hbm.*;
 import org.words.to.*;
@@ -9,6 +10,7 @@ import org.words.to.*;
 import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Set;
 
 public class TransApp {
 
@@ -47,6 +49,7 @@ public class TransApp {
         ConvertUtils.register(new GenericConverter<PlanTO, Plan>(PlanTO.class, Plan.class), Plan.class);
         ConvertUtils.register(new GenericConverter<TaskTO, Task>(TaskTO.class, Task.class), Task.class);
         ConvertUtils.register(new GenericConverter<UserTO, User>(UserTO.class, User.class), User.class);
+        ConvertUtils.register(new SetConverter(), Set.class);
     }
     //</editor-fold>
 

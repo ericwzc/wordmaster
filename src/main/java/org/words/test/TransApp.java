@@ -20,7 +20,7 @@ public class TransApp {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new WordMaster().initUser();
+                    new WordMaster();
                     JFrame frame = new JFrame("WordMaster");
                     frame.setDefaultCloseOperation(2);
                     JPanel jPanel = new WordMasterView();

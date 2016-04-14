@@ -35,7 +35,7 @@ public class WordMasterView extends JPanel {
     private void studyButtonActionPerformed(ActionEvent e) {
         tos = ServiceRegistry.getServiceInstance(TaskService.class).getSentences();
         if(tos.size() > 0) {
-            sentenceTO = tos.get(idx % tos.size());
+            setSentenceTO(tos.get(idx % tos.size()));
         }
     }
 

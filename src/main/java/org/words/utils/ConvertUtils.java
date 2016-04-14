@@ -79,11 +79,11 @@ public class ConvertUtils {
     }
 
     static Class resolveTargetClassName(Field field) throws ClassNotFoundException {
-        if (field.getType().getPackage().getName().equals("org.words,hbm")) {
+        if (field.getType().getPackage().getName().equals("org.words.hbm")) {
             return Class.forName(field.getType().getName().replace(".hbm", ".to") + "TO");
         }
         if (field.getType().getPackage().getName().equals("org.words.to")) {
-            return Class.forName(field.getType().getName().replace("TO", ""));
+            return Class.forName(field.getType().getName().replace(".to", ".hbm").replace("TO", ""));
         }
         throw new ClassNotFoundException();
     }
@@ -93,7 +93,7 @@ public class ConvertUtils {
             return Class.forName(clazz.getName().replace(".hbm", ".to") + "TO");
         }
         if (clazz.getPackage().getName().equals("org.words.to")) {
-            return Class.forName(clazz.getName().replace("TO", ""));
+            return Class.forName(clazz.getName().replace(".to", ".hbm").replace("TO", ""));
         }
 
         return clazz;

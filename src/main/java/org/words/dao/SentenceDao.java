@@ -1,11 +1,7 @@
 package org.words.dao;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.words.hbm.Sentence;
-import org.words.to.SentenceTO;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

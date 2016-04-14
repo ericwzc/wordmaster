@@ -4,11 +4,8 @@
 
 package org.words.gui;
 
-import java.awt.event.*;
-
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import org.apache.commons.beanutils.BeanUtils;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
 import org.jdesktop.beansbinding.BeanProperty;
 import org.jdesktop.beansbinding.BindingGroup;
@@ -20,7 +17,6 @@ import org.words.to.SentenceTO;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**

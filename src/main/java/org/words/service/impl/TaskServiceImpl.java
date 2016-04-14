@@ -1,16 +1,13 @@
 package org.words.service.impl;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.words.common.Transactional;
 import org.words.dao.SentenceDao;
 import org.words.hbm.Sentence;
-import org.words.hbm.Task;
 import org.words.service.TaskService;
 import org.words.to.SentenceTO;
 import org.words.to.TaskTO;
-import org.words.utils.BeanConverters;
+import org.words.utils.ConvertUtils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -37,6 +34,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<SentenceTO> getSentences() {
         List<Sentence> entityList = new SentenceDao().getSentences();
-        return BeanConverters.convert(entityList, SentenceTO.class);
+        List<SentenceTO> tos = new ArrayList<>(entityList.size());
+        for(Sentence sentence : entityList){
+            tos.add(ConvertUtils.convert(sentence, SentenceTO.class));
+        }
+        return tos;
     }
 }

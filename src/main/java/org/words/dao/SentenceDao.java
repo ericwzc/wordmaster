@@ -1,7 +1,9 @@
 package org.words.dao;
 
 import org.words.hbm.Sentence;
+import org.words.hbm.Word;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,7 +11,7 @@ import java.util.List;
  */
 public class SentenceDao extends BaseDao<Sentence> {
     public List<Sentence> getSentences(){
-        List<Sentence> entityList = currentSession().createQuery("select s from Sentence s join fetch s.word b where b.name = 'abandon'").list();
-        return entityList;
+        List<Word> wordList = currentSession().createQuery("select w from Word w join fetch w.sentences where w.name = 'abandon'").list();
+        return new ArrayList<>(wordList.get(0).getSentences());
     }
 }

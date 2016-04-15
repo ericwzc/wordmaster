@@ -1,13 +1,10 @@
 package org.words.test;
 
 import org.words.gui.WordMasterView;
-import org.words.hbm.*;
-import org.words.to.*;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Set;
 
 public class TransApp {
 

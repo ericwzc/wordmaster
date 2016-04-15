@@ -3,13 +3,11 @@ package org.words.common;
 import net.bytebuddy.implementation.bind.annotation.Origin;
 import net.bytebuddy.implementation.bind.annotation.RuntimeType;
 import net.bytebuddy.implementation.bind.annotation.SuperCall;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.words.utils.HibernateUtils;
 
 import java.lang.reflect.Method;
-import java.util.Objects;
 import java.util.concurrent.Callable;
 
 /**
@@ -27,18 +25,17 @@ public class TranDelegator {
             entry = true;
         }
         try {
+            Object returnVal = null;
             if (method.getReturnType() != null) {
-                return superMethod.call();
-            } else {
-                superMethod.call();
-                return null;
+                returnVal =  superMethod.call();
             }
+            transaction.commit();
+            return returnVal;
         } catch (Exception e) {
             transaction.rollback();
             throw new IllegalStateException(e);
         } finally {
             if (entry) {
-                transaction.commit();
                 transaction = null;
             }
         }

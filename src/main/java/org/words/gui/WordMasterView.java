@@ -26,6 +26,7 @@ public class WordMasterView extends JPanel {
     private SentenceTO sentenceTO = new SentenceTO();
     private List<SentenceTO> tos;
     private int idx = 0;
+    private Object lock = new Object();
 
     public WordMasterView() {
         initComponents();
@@ -35,7 +36,7 @@ public class WordMasterView extends JPanel {
     private void studyButtonActionPerformed(ActionEvent e) {
         tos = ServiceRegistry.getServiceInstance(TaskService.class).getSentences();
         if(tos.size() > 0) {
-            setSentenceTO(tos.get(idx % tos.size()));
+            setSentenceTO(tos.get(0));
         }
     }
 
@@ -49,12 +50,18 @@ public class WordMasterView extends JPanel {
         firePropertyChange("sentenceTO", old, sentenceTO);
     }
 
-    private void button2ActionPerformed(ActionEvent e) {
-        sentenceTO = tos.get(++idx % tos.size());
+    private void nextButtonPressed(ActionEvent e) {
+        synchronized (lock) {
+            idx = (idx + 1 ) % tos.size();
+            setSentenceTO(tos.get(idx));
+        }
     }
 
-    private void button1ActionPerformed(ActionEvent e) {
-        sentenceTO = tos.get((--idx + tos.size()) % tos.size());
+    private void prevButtonPressed(ActionEvent e) {
+        synchronized (lock) {
+            idx = (idx + tos.size() - 1) % tos.size();
+            setSentenceTO(tos.get(idx));
+        }
     }
 
     private void initComponents() {
@@ -105,13 +112,13 @@ public class WordMasterView extends JPanel {
 
             //---- button1 ----
             button1.setText("<");
-            button1.addActionListener(e -> button1ActionPerformed(e));
+            button1.addActionListener(e -> prevButtonPressed(e));
             panel1.add(button1, CC.xy(1, 1));
             panel1.add(label3, CC.xy(3, 1, CC.CENTER, CC.DEFAULT));
 
             //---- button2 ----
             button2.setText(">");
-            button2.addActionListener(e -> button2ActionPerformed(e));
+            button2.addActionListener(e -> nextButtonPressed(e));
             panel1.add(button2, CC.xy(4, 1));
         }
         add(panel1, CC.xy(1, 7, CC.CENTER, CC.DEFAULT));

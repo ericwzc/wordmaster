@@ -51,7 +51,7 @@ public class ConvertUtils {
                     if (set == null || set.isEmpty())
                         dstField.set(result, set);
                     else {
-                        Set newSet = (Set) field.get(src).getClass().newInstance();
+                        Set newSet = new HashSet<>();
 
                         for (Object obj : set) {
                             Class<?> targetType = resolveTargetClassName(obj.getClass());

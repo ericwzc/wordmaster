@@ -1,7 +1,6 @@
 package org.words.service;
 
 import org.words.common.Transactional;
-import org.words.hbm.User;
 import org.words.to.UserTO;
 
 /**
@@ -10,6 +9,4 @@ import org.words.to.UserTO;
 public interface UserService {
     @Transactional
     void saveUser(UserTO userTO);
-    @Transactional
-    UserTO getUser();
 }

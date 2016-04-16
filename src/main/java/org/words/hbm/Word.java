@@ -63,20 +63,18 @@ public class Word {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Word word = (Word) o;
 
-        return name.equals(word.name);
+        return !(name != null ? !name.equals(word.name) : word.name != null);
 
     }
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return name != null ? name.hashCode() : 0;
     }
 }
 

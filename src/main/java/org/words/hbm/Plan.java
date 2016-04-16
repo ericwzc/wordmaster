@@ -84,17 +84,13 @@ public class Plan {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Plan plan = (Plan) o;
 
-        if (number != plan.number)
-            return false;
-        if (startDate != null ? !startDate.equals(plan.startDate) : plan.startDate != null)
-            return false;
+        if (number != plan.number) return false;
+        if (startDate != null ? !startDate.equals(plan.startDate) : plan.startDate != null) return false;
         return !(user != null ? !user.equals(plan.user) : plan.user != null);
 
     }

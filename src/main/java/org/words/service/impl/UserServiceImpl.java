@@ -12,15 +12,11 @@ import org.words.utils.ConvertUtils;
  */
 public class UserServiceImpl implements UserService{
 
-    @Transactional
-    @Override
-    public void saveUser(UserTO userTO) {
-        new UserDao().save(ConvertUtils.convert(userTO, User.class));
-    }
+    private UserDao userDao = new UserDao();
 
     @Transactional
     @Override
-    public UserTO getUser() {
-        return null;
+    public void saveUser(UserTO userTO) {
+        userDao.save(ConvertUtils.convert(userTO, User.class));
     }
 }

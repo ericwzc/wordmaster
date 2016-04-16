@@ -1,12 +1,9 @@
 package org.words.service;
 
 import org.words.common.Transactional;
-import org.words.hbm.Task;
 import org.words.to.SentenceTO;
 import org.words.to.TaskTO;
 
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,9 +11,5 @@ import java.util.List;
  */
 public interface TaskService {
     @Transactional
-    List<TaskTO> getTasks(Date date);
-    @Transactional
-    void createTasks(Collection<TaskTO> tasks);
-    @Transactional
-    List<SentenceTO> getSentences();
+    List<SentenceTO> getSentences4Today();
 }

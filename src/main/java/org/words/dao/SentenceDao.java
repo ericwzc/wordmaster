@@ -11,7 +11,8 @@ import java.util.List;
  */
 public class SentenceDao extends BaseDao<Sentence> {
     public List<Sentence> getSentences(){
-        List<Word> wordList = currentSession().createQuery("select w from Word w join fetch w.sentences where w.name = 'abandon'").list();
-        return new ArrayList<>(wordList.get(0).getSentences());
+        List<Sentence> wordList = currentSession().createQuery("select s from Sentence s join fetch s.word where s.word.name = 'abandon'").list();
+        return wordList;
     }
 }
+

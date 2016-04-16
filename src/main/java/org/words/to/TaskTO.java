@@ -69,17 +69,17 @@ public class TaskTO extends AbstractTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        TaskTO task = (TaskTO) o;
+        TaskTO taskTO = (TaskTO) o;
 
-        if (!deadLine.equals(task.deadLine)) return false;
-        return plan.equals(task.plan);
+        if (deadLine != null ? !deadLine.equals(taskTO.deadLine) : taskTO.deadLine != null) return false;
+        return !(plan != null ? !plan.equals(taskTO.plan) : taskTO.plan != null);
 
     }
 
     @Override
     public int hashCode() {
-        int result = deadLine.hashCode();
-        result = 31 * result + plan.hashCode();
+        int result = deadLine != null ? deadLine.hashCode() : 0;
+        result = 31 * result + (plan != null ? plan.hashCode() : 0);
         return result;
     }
 }

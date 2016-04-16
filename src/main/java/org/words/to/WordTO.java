@@ -63,20 +63,18 @@ public class WordTO extends AbstractTO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        WordTO word = (WordTO) o;
+        WordTO wordTO = (WordTO) o;
 
-        return name.equals(word.name);
+        return !(name != null ? !name.equals(wordTO.name) : wordTO.name != null);
 
     }
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return name != null ? name.hashCode() : 0;
     }
 }
 

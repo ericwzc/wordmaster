@@ -84,18 +84,14 @@ public class PlanTO extends AbstractTO{
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        PlanTO plan = (PlanTO) o;
+        PlanTO planTO = (PlanTO) o;
 
-        if (number != plan.number)
-            return false;
-        if (startDate != null ? !startDate.equals(plan.startDate) : plan.startDate != null)
-            return false;
-        return !(user != null ? !user.equals(plan.user) : plan.user != null);
+        if (number != planTO.number) return false;
+        if (startDate != null ? !startDate.equals(planTO.startDate) : planTO.startDate != null) return false;
+        return !(user != null ? !user.equals(planTO.user) : planTO.user != null);
 
     }
 

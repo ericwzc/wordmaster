@@ -1,11 +1,11 @@
-JFDML JFormDesigner: "5.2.2.2.228" Java: "1.8.0_40" encoding: "UTF-8"
+JFDML JFormDesigner: "5.2.2.2.228" Java: "1.8.0_45" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-			"$rowSpecs": "fill:default, linegap, pref:grow, pargap, pref:grow, pargap, pref"
-			"$columnSpecs": "default:grow"
+			"$rowSpecs": "fill:default, linegap, pref:grow, pargap, pref:grow, pargap, pref, linegap, default"
+			"$columnSpecs": "default:grow, labelcompgap, default"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JToolBar", new FormLayoutManager( class javax.swing.JToolBar ) ) {
@@ -40,7 +40,7 @@ new FormModel {
 				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-				"$columnSpecs": "pref:grow, labelcompgap, pref:grow, pref:grow"
+				"$columnSpecs": "pref:grow, labelcompgap, default:grow, labelcompgap, 27dlu:grow"
 				"$rowSpecs": "default"
 			} ) {
 				name: "panel1"
@@ -64,7 +64,8 @@ new FormModel {
 					"text": ">"
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "nextButtonPressed", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 4
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+					"gridX": 5
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridY": 7

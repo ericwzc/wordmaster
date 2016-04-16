@@ -27,7 +27,7 @@ public class TranDelegator {
         try {
             Object returnVal = null;
             if (method.getReturnType() != null) {
-                returnVal =  superMethod.call();
+                returnVal = superMethod.call();
             }
             transaction.commit();
             return returnVal;

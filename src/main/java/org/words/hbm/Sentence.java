@@ -71,24 +71,32 @@ public class Sentence {
         this.task = task;
     }
 
+    public void addToTask(Task task){
+        task.addSentence(this);
+        this.task = task;
+    }
+
     @Override
     public String toString() {
         return "Sentence(" + english + ":" + chinese + ")";
     }
 
     @Override
-    public int hashCode() {
-        List<?> list = new ArrayList<>(Arrays.asList(english, chinese));
-        return list.hashCode();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Sentence sentence = (Sentence) o;
+
+        if (english != null ? !english.equals(sentence.english) : sentence.english != null) return false;
+        return !(chinese != null ? !chinese.equals(sentence.chinese) : sentence.chinese != null);
+
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if(!(obj instanceof Sentence))
-            return false;
-        Sentence s2 = (Sentence) obj;
-        List<?> list = new ArrayList<>(Arrays.asList(english, chinese));
-        List<?> list2 = new ArrayList<>(Arrays.asList(s2.english, s2.chinese));
-        return list.equals(list2);
+    public int hashCode() {
+        int result = english != null ? english.hashCode() : 0;
+        result = 31 * result + (chinese != null ? chinese.hashCode() : 0);
+        return result;
     }
 }

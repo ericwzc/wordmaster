@@ -14,6 +14,7 @@ import org.jdesktop.beansbinding.ELProperty;
 import org.words.factory.ServiceRegistry;
 import org.words.service.TaskService;
 import org.words.to.SentenceTO;
+import org.words.to.TaskTO;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -34,7 +35,7 @@ public class WordMasterView extends JPanel {
     }
 
     private void studyButtonActionPerformed(ActionEvent e) {
-        tos = ServiceRegistry.getServiceInstance(TaskService.class).getSentences();
+        tos = ServiceRegistry.getServiceInstance(TaskService.class).getSentences4Today();
         if(tos.size() > 0) {
             setSentenceTO(tos.get(0));
         }
@@ -78,8 +79,8 @@ public class WordMasterView extends JPanel {
 
         //======== this ========
         setLayout(new FormLayout(
-            "default:grow",
-            "fill:default, $lgap, 2*(pref:grow, $pgap), pref"));
+            "default:grow, $lcgap, default",
+            "fill:default, $lgap, 2*(pref:grow, $pgap), pref, $lgap, default"));
 
         //======== toolBar1 ========
         {
@@ -107,7 +108,7 @@ public class WordMasterView extends JPanel {
         //======== panel1 ========
         {
             panel1.setLayout(new FormLayout(
-                "pref:grow, $lcgap, 2*(pref:grow)",
+                "pref:grow, $lcgap, default:grow, $lcgap, 27dlu:grow",
                 "default"));
 
             //---- button1 ----
@@ -119,7 +120,7 @@ public class WordMasterView extends JPanel {
             //---- button2 ----
             button2.setText(">");
             button2.addActionListener(e -> nextButtonPressed(e));
-            panel1.add(button2, CC.xy(4, 1));
+            panel1.add(button2, CC.xy(5, 1, CC.CENTER, CC.DEFAULT));
         }
         add(panel1, CC.xy(1, 7, CC.CENTER, CC.DEFAULT));
 

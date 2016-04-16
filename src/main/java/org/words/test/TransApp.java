@@ -19,12 +19,15 @@ public class TransApp {
                 try {
                     new WordMaster();
                     JFrame frame = new JFrame("WordMaster");
-                    frame.setDefaultCloseOperation(2);
+                    frame.setDefaultCloseOperation(3);
                     JPanel jPanel = new WordMasterView();
                     frame.add(jPanel);
                     frame.pack();
                     frame.setVisible(true);
+                    frame.setLocation(250,250);
+                    frame.setSize(600, 250);
                 } catch (Exception e) {
+                    System.err.println(e);
                 }
             }
         });

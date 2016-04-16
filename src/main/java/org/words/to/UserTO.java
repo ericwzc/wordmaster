@@ -12,6 +12,7 @@ import java.util.Set;
  * User entity
  @author Eric Wang
  **/
+@SuppressWarnings("unused")
 public class UserTO extends AbstractTO {
     private String id;
     private String name;
@@ -60,6 +61,22 @@ public class UserTO extends AbstractTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserTO userTO = (UserTO) o;
+
+        return !(name != null ? !name.equals(userTO.name) : userTO.name != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return name != null ? name.hashCode() : 0;
     }
 }
 

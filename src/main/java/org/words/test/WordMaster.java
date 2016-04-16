@@ -9,21 +9,26 @@ package org.words.test;
  */
 
 import org.h2.server.Service;
+import org.hibernate.FlushMode;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.words.dao.WordDao;
 import org.words.factory.ServiceRegistry;
+import org.words.hbm.Plan;
 import org.words.hbm.Sentence;
+import org.words.hbm.Task;
 import org.words.hbm.Word;
+import org.words.service.PlanService;
 import org.words.service.UserService;
 import org.words.to.PlanTO;
+import org.words.to.TaskTO;
 import org.words.to.UserTO;
 import org.words.utils.HibernateUtils;
 
 import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;
-import java.util.Date;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -257,13 +262,57 @@ public class WordMaster {
         }
     }
 
-
-	void initUser(){
+	void initUser() {
 		UserTO userTO = new UserTO("Eric");
 		PlanTO planTO = new PlanTO(new Date(), 50);
 		userTO.addPlan(planTO);
 		ServiceRegistry.getServiceInstance(UserService.class).saveUser(userTO);
 	}
+
+	void initTasks(){
+        PlanTO planTO = ServiceRegistry.getServiceInstance(PlanService.class).getPlan("Eric");
+        Date date = planTO.getStartDate();
+
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction transaction = session.getTransaction();
+        transaction.begin();
+
+        List<String> sentences = session.createQuery("select s.id from Sentence s").list();
+        Collections.shuffle(sentences);
+
+        transaction.commit();
+        session.close();
+
+        int num = planTO.getNumber();
+
+        for(int i = 0; i < sentences.size(); i += num) {
+            int end = i + num;
+            saveTasks(sentences, i, end > sentences.size() ? sentences.size() : end, planTO, date);
+            date = new Date(date.getTime() + 60 * 60 * 24 * 1000);
+        }
+    }
+
+    private void saveTasks(List<String> sentences, int start, int end, PlanTO planTO, Date date){
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction transaction = session.getTransaction();
+        transaction.begin();
+
+        Plan plan = (Plan) session.get(Plan.class, planTO.getId());
+
+        Task task = new Task();
+        task.setDeadLine(date);
+        plan.addTask(task);
+
+        for(int i = start; i < end; i++) {
+            Sentence sentence = (Sentence) session.load(Sentence.class, sentences.get(i));
+            task.addSentence(sentence);
+            session.save(task);
+        }
+
+        transaction.commit();
+        session.close();
+    }
+
 
     public void close() {
     	try {

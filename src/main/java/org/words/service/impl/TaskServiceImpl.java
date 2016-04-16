@@ -2,14 +2,14 @@ package org.words.service.impl;
 
 import org.words.common.Transactional;
 import org.words.dao.SentenceDao;
+import org.words.dao.TaskDao;
 import org.words.hbm.Sentence;
+import org.words.hbm.Task;
 import org.words.service.TaskService;
 import org.words.to.SentenceTO;
-import org.words.to.TaskTO;
 import org.words.utils.ConvertUtils;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -18,26 +18,23 @@ import java.util.List;
  */
 public class TaskServiceImpl implements TaskService {
 
-    @Transactional
-    @Override
-    public List<TaskTO> getTasks(Date date) {
-        return null;
-    }
+    private TaskDao taskDao = new TaskDao();
 
     @Transactional
     @Override
-    public void createTasks(Collection<TaskTO> tasks) {
+    public List<SentenceTO> getSentences4Today() {
+        List<Sentence> entityList = new ArrayList<>(getTask4Today().getSentences());
 
-    }
-
-    @Transactional
-    @Override
-    public List<SentenceTO> getSentences() {
-        List<Sentence> entityList = new SentenceDao().getSentences();
         List<SentenceTO> tos = new ArrayList<>(entityList.size());
-        for(Sentence sentence : entityList){
+
+        for (Sentence sentence : entityList)
             tos.add(ConvertUtils.convert(sentence, SentenceTO.class));
-        }
+
         return tos;
+    }
+
+
+    private Task getTask4Today() {
+        return taskDao.getTaskForDate(new Date());
     }
 }

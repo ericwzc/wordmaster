@@ -113,7 +113,6 @@ public class ConvertUtils {
 
         WordTO to =  convert(word, WordTO.class, new HashMap());
         System.out.println(to.getName());
-
     }
 
 }

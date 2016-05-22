@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SentenceTO extends AbstractTO{
+public class SentenceTO extends AbstractTO implements Cloneable{
 	private String id;
     private int version;
     private String english;
@@ -69,6 +69,14 @@ public class SentenceTO extends AbstractTO{
 
     public void setTask(TaskTO task) {
         this.task = task;
+    }
+
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+        }
+        return null;
     }
 
     @Override

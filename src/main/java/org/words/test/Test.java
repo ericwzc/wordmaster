@@ -4,9 +4,11 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.words.factory.ServiceRegistry;
 import org.words.hbm.Plan;
 import org.words.hbm.Sentence;
 import org.words.hbm.User;
+import org.words.service.UserService;
 import org.words.utils.HibernateUtils;
 
 import java.util.Date;
@@ -166,19 +168,12 @@ public class Test {
 	private void testPlanUser(SessionFactory sessionFactory) {
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
-		User user = new User("eric");
-		Plan plan = new Plan(new Date(), 50);
-		user.addPlan(plan);
-		session.save(user);
-		tx.commit();
-		session.close();
+		User user = new User("Sunny");
+		session.persist(user);
 
-        plan.setUser(null);
+		User user1 = (User) session.createQuery("from User u where u.name = 'Sunny'").uniqueResult();
+		System.out.println("+" + user1.getName() + "+");
 
-        session = sessionFactory.openSession();
-        tx = session.beginTransaction();
-        plan  = (Plan) session.merge(plan);
-        tx.commit();
-        session.close();
+		throw new RuntimeException("unknown error!");
 	}
 }

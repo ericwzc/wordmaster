@@ -4,10 +4,63 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-			"$rowSpecs": "fill:default, linegap, pref:grow, pargap, pref:grow, pargap, pref, linegap, default"
+			"$rowSpecs": "fill:default, pargap, pref, linegap, default"
 			"$columnSpecs": "default:grow, labelcompgap, default"
 		} ) {
 			name: "this"
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default:grow, labelcompgap, default"
+				"$rowSpecs": "default, pargap, default, pargap, default"
+			} ) {
+				name: "learnPanel"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label1"
+					"text": "text"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label2"
+					"text": "text"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 3
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "pref:grow, labelcompgap, default:grow, labelcompgap, 27dlu:grow"
+					"$rowSpecs": "default"
+				} ) {
+					name: "panel1"
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button1"
+						"text": "<"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "prevButtonPressed", true ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+						"gridY": 1
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label3"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 3
+						"gridY": 1
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button2"
+						"text": ">"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "nextButtonPressed", true ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+						"gridX": 5
+					} )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 5
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridY": 5
+			} )
 			add( new FormContainer( "javax.swing.JToolBar", new FormLayoutManager( class javax.swing.JToolBar ) ) {
 				name: "toolBar1"
 				add( new FormComponent( "javax.swing.JButton" ) {
@@ -21,59 +74,67 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "reviewBtn"
 					"text": "Start Review"
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "reviewBtnMouseClicked", true ) )
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridY": 1
 			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label1"
-				"text": "text"
-			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridY": 3
-				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
-			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label2"
-				"text": "text"
-			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridY": 5
-				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
-			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-				"$columnSpecs": "pref:grow, labelcompgap, default:grow, labelcompgap, 27dlu:grow"
-				"$rowSpecs": "default"
+				"$columnSpecs": "center:default:grow, labelcompgap, default"
+				"$rowSpecs": "default, pargap, default, pargap, default, pargap, default"
 			} ) {
-				name: "panel1"
-				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "button1"
-					"text": "<"
-					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "prevButtonPressed", true ) )
+				name: "reviewPanel"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label4"
+					"text": "text"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 1
 					"gridY": 1
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "label3"
+					name: "label5"
+					"text": "text"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 3
-					"gridY": 1
-					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+					"gridX": 1
+					"gridY": 3
 				} )
-				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "button2"
-					"text": ">"
-					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "nextButtonPressed", true ) )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
+					name: "fragmentPanel"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
-					"gridX": 5
+					"gridY": 5
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "default, labelcompgap, default"
+					"$rowSpecs": "default"
+				} ) {
+					name: "panel2"
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button3"
+						"text": "<"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button3ActionPerformed", true ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+						"gridY": 1
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button4"
+						"text": ">"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button4ActionPerformed", true ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 3
+						"gridY": 1
+					} )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 7
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridY": 7
-				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+				"gridX": 1
+				"gridY": 3
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 690, 215 )
+			"size": new java.awt.Dimension( 690, 265 )
 		} )
 		addBindingGroup( new FormBindingGroup( class org.jdesktop.beansbinding.BindingGroup ) {
 			"name": "bindingGroup"

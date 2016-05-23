@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "5.2.2.2.228" Java: "1.8.0_45" encoding: "UTF-8"
+JFDML JFormDesigner: "5.2.2.2.228" Java: "1.8.0_40" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -14,14 +14,14 @@ new FormModel {
 			} ) {
 				name: "learnPanel"
 				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "label1"
-					"text": "text"
+					name: "learnChinese"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "label2"
+					name: "learnEnglish"
 					"text": "text"
+					"font": new java.awt.Font( "Segoe UI", 0, 16 )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridY": 3
 					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
@@ -30,9 +30,9 @@ new FormModel {
 					"$columnSpecs": "pref:grow, labelcompgap, default:grow, labelcompgap, 27dlu:grow"
 					"$rowSpecs": "default"
 				} ) {
-					name: "panel1"
+					name: "learnNavPanel"
 					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "button1"
+						name: "prevBtn"
 						"text": "<"
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "prevButtonPressed", true ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
@@ -40,14 +40,14 @@ new FormModel {
 						"gridY": 1
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label3"
+						name: "wordLabel"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
 						"gridY": 1
 						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "button2"
+						name: "nextBtn"
 						"text": ">"
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "nextButtonPressed", true ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
@@ -85,15 +85,15 @@ new FormModel {
 			} ) {
 				name: "reviewPanel"
 				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "label4"
-					"text": "text"
+					name: "revChineseLabel"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 1
 					"gridY": 1
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "label5"
+					name: "revEnglishLabel"
 					"text": "text"
+					"font": new java.awt.Font( "Segoe UI", 0, 16 )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 1
 					"gridY": 3
@@ -104,24 +104,32 @@ new FormModel {
 					"gridY": 5
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-					"$columnSpecs": "default, labelcompgap, default"
+					"$columnSpecs": "default, labelcompgap, default, labelcompgap, default"
 					"$rowSpecs": "default"
 				} ) {
-					name: "panel2"
+					name: "revNavPanel"
 					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "button3"
+						name: "revPrev"
 						"text": "<"
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button3ActionPerformed", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "revPrevActionPerformed", true ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 1
 						"gridY": 1
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "button4"
-						"text": ">"
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button4ActionPerformed", true ) )
+						name: "showAnswer"
+						"text": ":)"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showAnswerActionPerformed", true ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
+						"gridY": 1
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "revNext"
+						"text": ">"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "revNextActionPerformed", true ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 5
 						"gridY": 1
 					} )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
@@ -134,17 +142,17 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 690, 265 )
+			"size": new java.awt.Dimension( 695, 295 )
 		} )
 		addBindingGroup( new FormBindingGroup( class org.jdesktop.beansbinding.BindingGroup ) {
 			"name": "bindingGroup"
-			addBinding( new FormBinding( "this", "${sentenceTO.chinese}", "label1", "text" ) {
+			addBinding( new FormBinding( "this", "${sentenceTO.chinese}", "learnChinese", "text" ) {
 				"name": "chineseLabel"
 			} )
-			addBinding( new FormBinding( "this", "${sentenceTO.english}", "label2", "text" ) {
+			addBinding( new FormBinding( "this", "${sentenceTO.english}", "learnEnglish", "text" ) {
 				"name": "englishLabel"
 			} )
-			addBinding( new FormBinding( "this", "${sentenceTO.word.name}", "label3", "text" ) {
+			addBinding( new FormBinding( "this", "${sentenceTO.word.name}", "wordLabel", "text" ) {
 				"name": "wordname"
 			} )
 		} )

@@ -4,8 +4,6 @@
 
 package org.words.gui;
 
-import java.awt.*;
-import java.awt.event.*;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
@@ -16,20 +14,22 @@ import org.jdesktop.beansbinding.ELProperty;
 import org.words.factory.ServiceRegistry;
 import org.words.service.TaskService;
 import org.words.to.SentenceTO;
-import org.words.to.TaskTO;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * @author User #1
  */
 public class WordMasterView extends JPanel {
+    private static final String LOADING_PLEASE_WAIT = "Loading, please wait...";
     private SentenceTO sentenceTO = new SentenceTO();
     private LinkedList<String> words;
     private List<SentenceTO> tos;
@@ -46,10 +46,24 @@ public class WordMasterView extends JPanel {
     private void studyButtonActionPerformed(ActionEvent e) {
         this.learnPanel.setVisible(true);
         this.reviewPanel.setVisible(false);
-        tos = ServiceRegistry.getServiceInstance(TaskService.class).getSentences4Today();
-        if (tos.size() > 0) {
-            setSentenceTO(tos.get(0));
-        }
+        studyButton.setEnabled(false);
+        prevBtn.setEnabled(false);
+        nextBtn.setEnabled(false);
+
+        learnEnglish.setText(LOADING_PLEASE_WAIT);
+
+        SwingUtilities.invokeLater(new Runnable() {
+                                       @Override
+                                       public void run() {
+                                           tos = ServiceRegistry.getServiceInstance(TaskService.class).getSentences4Today();
+                                           learnEnglish.setText("");
+                                           if (tos.size() > 0) {
+                                               setSentenceTO(tos.get(0));
+                                           }
+                                           prevBtn.setEnabled(true);
+                                           nextBtn.setEnabled(true);
+                                       }
+                                   });
     }
 
     public SentenceTO getSentenceTO() {
@@ -85,18 +99,33 @@ public class WordMasterView extends JPanel {
     }
 
     private void reviewBtnMouseClicked(MouseEvent e) {
-        tos = ServiceRegistry.getServiceInstance(TaskService.class).getSentences4Today();
-        updateReviewBoard();
+        reviewPanel.setVisible(true);
+        learnPanel.setVisible(false);
+
+        revEnglishLabel.setText(LOADING_PLEASE_WAIT);
+        reviewBtn.setEnabled(false);
+        revNext.setEnabled(false);
+        revPrev.setEnabled(false);
+        showAnswer.setEnabled(false);
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                tos = ServiceRegistry.getServiceInstance(TaskService.class).getSentences4Today();
+                updateReviewBoard();
+                revNext.setEnabled(true);
+                revPrev.setEnabled(true);
+                showAnswer.setEnabled(true);
+            }
+        });
     }
 
     private void updateReviewBoard(){
-        reviewPanel.setVisible(true);
-        learnPanel.setVisible(false);
         fragmentPanel.removeAll();
 
         SentenceTO to = tos.get(idx);
-        label4.setText(to.getChinese());
-        label5.setText("");
+        revChineseLabel.setText(to.getChinese());
+        revEnglishLabel.setText("");
         String[] words = to.getEnglish().split("\\s+");
         this.words = new LinkedList<>(Arrays.asList(words));
         Collections.shuffle(Arrays.asList(words));
@@ -105,13 +134,14 @@ public class WordMasterView extends JPanel {
             final JLabel label = new JLabel();
             label.setText(word);
             label.setBorder(BorderFactory.createLineBorder(Color.black));
+            label.setFont(new Font("Segoe UI", Font.PLAIN, 22));
             label.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if(label.getText().equalsIgnoreCase(WordMasterView.this.words.getFirst())) {
                         WordMasterView.this.words.removeFirst();
-                        String txt = label5.getText();
-                        label5.setText(txt.isEmpty() ? txt + label.getText() : txt + " " + label.getText());
+                        String txt = revEnglishLabel.getText();
+                        revEnglishLabel.setText(txt.isEmpty() ? txt + label.getText() : txt + " " + label.getText());
                         fragmentPanel.remove(label);
                         fragmentPanel.repaint();
                     }
@@ -121,35 +151,42 @@ public class WordMasterView extends JPanel {
         }
     }
 
-    private void button4ActionPerformed(ActionEvent e) {
+    private void revNextActionPerformed(ActionEvent e) {
         nextButtonPressed(e);
         updateReviewBoard();
     }
 
-    private void button3ActionPerformed(ActionEvent e) {
+    private void revPrevActionPerformed(ActionEvent e) {
         prevButtonPressed(e);
         updateReviewBoard();
+    }
+
+    private void showAnswerActionPerformed(ActionEvent e) {
+        revEnglishLabel.setText(tos.get(idx).getEnglish());
+        fragmentPanel.removeAll();
+        fragmentPanel.repaint();
     }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         learnPanel = new JPanel();
-        label1 = new JLabel();
-        label2 = new JLabel();
-        panel1 = new JPanel();
-        button1 = new JButton();
-        label3 = new JLabel();
-        button2 = new JButton();
+        learnChinese = new JLabel();
+        learnEnglish = new JLabel();
+        learnNavPanel = new JPanel();
+        prevBtn = new JButton();
+        wordLabel = new JLabel();
+        nextBtn = new JButton();
         toolBar1 = new JToolBar();
         studyButton = new JButton();
         reviewBtn = new JButton();
         reviewPanel = new JPanel();
-        label4 = new JLabel();
-        label5 = new JLabel();
+        revChineseLabel = new JLabel();
+        revEnglishLabel = new JLabel();
         fragmentPanel = new JPanel();
-        panel2 = new JPanel();
-        button3 = new JButton();
-        button4 = new JButton();
+        revNavPanel = new JPanel();
+        revPrev = new JButton();
+        showAnswer = new JButton();
+        revNext = new JButton();
 
         //======== this ========
         setLayout(new FormLayout(
@@ -161,33 +198,31 @@ public class WordMasterView extends JPanel {
             learnPanel.setLayout(new FormLayout(
                 "default:grow, $lcgap, default",
                 "2*(default, $pgap), default"));
+            learnPanel.add(learnChinese, CC.xy(1, 1, CC.CENTER, CC.DEFAULT));
 
-            //---- label1 ----
-            label1.setText("text");
-            learnPanel.add(label1, CC.xy(1, 1, CC.CENTER, CC.DEFAULT));
+            //---- learnEnglish ----
+            learnEnglish.setText("text");
+            learnEnglish.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+            learnPanel.add(learnEnglish, CC.xy(1, 3, CC.CENTER, CC.DEFAULT));
 
-            //---- label2 ----
-            label2.setText("text");
-            learnPanel.add(label2, CC.xy(1, 3, CC.CENTER, CC.DEFAULT));
-
-            //======== panel1 ========
+            //======== learnNavPanel ========
             {
-                panel1.setLayout(new FormLayout(
+                learnNavPanel.setLayout(new FormLayout(
                     "pref:grow, $lcgap, default:grow, $lcgap, 27dlu:grow",
                     "default"));
 
-                //---- button1 ----
-                button1.setText("<");
-                button1.addActionListener(e -> prevButtonPressed(e));
-                panel1.add(button1, CC.xy(1, 1));
-                panel1.add(label3, CC.xy(3, 1, CC.CENTER, CC.DEFAULT));
+                //---- prevBtn ----
+                prevBtn.setText("<");
+                prevBtn.addActionListener(e -> prevButtonPressed(e));
+                learnNavPanel.add(prevBtn, CC.xy(1, 1));
+                learnNavPanel.add(wordLabel, CC.xy(3, 1, CC.CENTER, CC.DEFAULT));
 
-                //---- button2 ----
-                button2.setText(">");
-                button2.addActionListener(e -> nextButtonPressed(e));
-                panel1.add(button2, CC.xy(5, 1, CC.CENTER, CC.DEFAULT));
+                //---- nextBtn ----
+                nextBtn.setText(">");
+                nextBtn.addActionListener(e -> nextButtonPressed(e));
+                learnNavPanel.add(nextBtn, CC.xy(5, 1, CC.CENTER, CC.DEFAULT));
             }
-            learnPanel.add(panel1, CC.xy(1, 5, CC.CENTER, CC.DEFAULT));
+            learnPanel.add(learnNavPanel, CC.xy(1, 5, CC.CENTER, CC.DEFAULT));
         }
         add(learnPanel, CC.xy(1, 5));
 
@@ -217,14 +252,12 @@ public class WordMasterView extends JPanel {
             reviewPanel.setLayout(new FormLayout(
                 "center:default:grow, $lcgap, default",
                 "3*(default, $pgap), default"));
+            reviewPanel.add(revChineseLabel, CC.xy(1, 1));
 
-            //---- label4 ----
-            label4.setText("text");
-            reviewPanel.add(label4, CC.xy(1, 1));
-
-            //---- label5 ----
-            label5.setText("text");
-            reviewPanel.add(label5, CC.xy(1, 3));
+            //---- revEnglishLabel ----
+            revEnglishLabel.setText("text");
+            revEnglishLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+            reviewPanel.add(revEnglishLabel, CC.xy(1, 3));
 
             //======== fragmentPanel ========
             {
@@ -232,23 +265,28 @@ public class WordMasterView extends JPanel {
             }
             reviewPanel.add(fragmentPanel, CC.xy(1, 5));
 
-            //======== panel2 ========
+            //======== revNavPanel ========
             {
-                panel2.setLayout(new FormLayout(
-                    "default, $lcgap, default",
+                revNavPanel.setLayout(new FormLayout(
+                    "2*(default, $lcgap), default",
                     "default"));
 
-                //---- button3 ----
-                button3.setText("<");
-                button3.addActionListener(e -> button3ActionPerformed(e));
-                panel2.add(button3, CC.xy(1, 1));
+                //---- revPrev ----
+                revPrev.setText("<");
+                revPrev.addActionListener(e -> revPrevActionPerformed(e));
+                revNavPanel.add(revPrev, CC.xy(1, 1));
 
-                //---- button4 ----
-                button4.setText(">");
-                button4.addActionListener(e -> button4ActionPerformed(e));
-                panel2.add(button4, CC.xy(3, 1));
+                //---- showAnswer ----
+                showAnswer.setText(":)");
+                showAnswer.addActionListener(e -> showAnswerActionPerformed(e));
+                revNavPanel.add(showAnswer, CC.xy(3, 1));
+
+                //---- revNext ----
+                revNext.setText(">");
+                revNext.addActionListener(e -> revNextActionPerformed(e));
+                revNavPanel.add(revNext, CC.xy(5, 1));
             }
-            reviewPanel.add(panel2, CC.xy(1, 7));
+            reviewPanel.add(revNavPanel, CC.xy(1, 7));
         }
         add(reviewPanel, CC.xy(1, 3));
 
@@ -256,35 +294,36 @@ public class WordMasterView extends JPanel {
         bindingGroup = new BindingGroup();
         bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
             this, ELProperty.create("${sentenceTO.chinese}"),
-            label1, BeanProperty.create("text"), "chineseLabel"));
+            learnChinese, BeanProperty.create("text"), "chineseLabel"));
         bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
             this, ELProperty.create("${sentenceTO.english}"),
-            label2, BeanProperty.create("text"), "englishLabel"));
+            learnEnglish, BeanProperty.create("text"), "englishLabel"));
         bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
             this, ELProperty.create("${sentenceTO.word.name}"),
-            label3, BeanProperty.create("text"), "wordname"));
+            wordLabel, BeanProperty.create("text"), "wordname"));
         bindingGroup.bind();
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     private JPanel learnPanel;
-    private JLabel label1;
-    private JLabel label2;
-    private JPanel panel1;
-    private JButton button1;
-    private JLabel label3;
-    private JButton button2;
+    private JLabel learnChinese;
+    private JLabel learnEnglish;
+    private JPanel learnNavPanel;
+    private JButton prevBtn;
+    private JLabel wordLabel;
+    private JButton nextBtn;
     private JToolBar toolBar1;
     private JButton studyButton;
     private JButton reviewBtn;
     private JPanel reviewPanel;
-    private JLabel label4;
-    private JLabel label5;
+    private JLabel revChineseLabel;
+    private JLabel revEnglishLabel;
     private JPanel fragmentPanel;
-    private JPanel panel2;
-    private JButton button3;
-    private JButton button4;
+    private JPanel revNavPanel;
+    private JButton revPrev;
+    private JButton showAnswer;
+    private JButton revNext;
     private BindingGroup bindingGroup;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

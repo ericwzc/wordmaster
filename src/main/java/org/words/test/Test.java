@@ -4,14 +4,10 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.words.factory.ServiceRegistry;
-import org.words.hbm.Plan;
 import org.words.hbm.Sentence;
 import org.words.hbm.User;
-import org.words.service.UserService;
 import org.words.utils.HibernateUtils;
 
-import java.util.Date;
 import java.util.List;
 
 /**

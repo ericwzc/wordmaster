@@ -38,6 +38,7 @@ public class StudyServiceImpl implements StudyService {
         for(Sentence sentence : queryResult){
             Record record = new Record();
             record.setSentence(sentence);
+            records.add(record);
             result.add(ConvertUtils.convert(sentence, SentenceTO.class));
         }
 

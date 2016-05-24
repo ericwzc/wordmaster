@@ -51,16 +51,17 @@ public class WordMasterView extends JPanel {
         nextBtn.setEnabled(false);
         showAllBtn.setEnabled(false);
 
-        learnEnglish.setText(LOADING_PLEASE_WAIT);
 
         SwingUtilities.invokeLater(new Runnable() {
                                        @Override
                                        public void run() {
-                                           tos = ServiceRegistry.getServiceInstance(StudyService.class).loadTasks(100, 50);
-                                           learnEnglish.setText("");
-                                           if (tos.size() > 0) {
-                                               setSentenceTO(tos.get(0));
+                                           if(tos.isEmpty()) {
+                                               learnEnglish.setText(LOADING_PLEASE_WAIT);
+                                               tos = ServiceRegistry.getServiceInstance(StudyService.class).loadTasks(100, 50);
                                            }
+                                           learnEnglish.setText("");
+                                           if (tos.size() > 0)
+                                               setSentenceTO(tos.get(0));
                                            prevBtn.setEnabled(true);
                                            nextBtn.setEnabled(true);
                                            showAllBtn.setEnabled(true);
@@ -104,7 +105,6 @@ public class WordMasterView extends JPanel {
         reviewPanel.setVisible(true);
         learnPanel.setVisible(false);
 
-        revEnglishLabel.setText(LOADING_PLEASE_WAIT);
         reviewBtn.setEnabled(false);
         revNext.setEnabled(false);
         revPrev.setEnabled(false);
@@ -113,7 +113,10 @@ public class WordMasterView extends JPanel {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                tos = ServiceRegistry.getServiceInstance(StudyService.class).loadTasks(100, 50);
+                if (tos.isEmpty()) {
+                    revEnglishLabel.setText(LOADING_PLEASE_WAIT);
+                    tos = ServiceRegistry.getServiceInstance(StudyService.class).loadTasks(100, 50);
+                }
                 updateReviewBoard();
                 revNext.setEnabled(true);
                 revPrev.setEnabled(true);
@@ -193,6 +196,7 @@ public class WordMasterView extends JPanel {
         revPrev = new JButton();
         showAnswer = new JButton();
         revNext = new JButton();
+        masteredBtn = new JButton();
 
         //======== this ========
         setLayout(new FormLayout(
@@ -278,7 +282,7 @@ public class WordMasterView extends JPanel {
             //======== revNavPanel ========
             {
                 revNavPanel.setLayout(new FormLayout(
-                    "2*(default, $lcgap), default",
+                    "3*(default, $lcgap), default",
                     "default"));
 
                 //---- revPrev ----
@@ -295,6 +299,10 @@ public class WordMasterView extends JPanel {
                 revNext.setText(">");
                 revNext.addActionListener(e -> revNextActionPerformed(e));
                 revNavPanel.add(revNext, CC.xy(5, 1));
+
+                //---- masteredBtn ----
+                masteredBtn.setText("zZ..");
+                revNavPanel.add(masteredBtn, CC.xy(7, 1));
             }
             reviewPanel.add(revNavPanel, CC.xy(1, 7));
         }
@@ -331,6 +339,7 @@ public class WordMasterView extends JPanel {
     private JButton revPrev;
     private JButton showAnswer;
     private JButton revNext;
+    private JButton masteredBtn;
     private BindingGroup bindingGroup;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

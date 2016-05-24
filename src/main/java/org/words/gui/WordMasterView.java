@@ -49,6 +49,7 @@ public class WordMasterView extends JPanel {
         studyButton.setEnabled(false);
         prevBtn.setEnabled(false);
         nextBtn.setEnabled(false);
+        showAllBtn.setEnabled(false);
 
         learnEnglish.setText(LOADING_PLEASE_WAIT);
 
@@ -62,6 +63,7 @@ public class WordMasterView extends JPanel {
                                            }
                                            prevBtn.setEnabled(true);
                                            nextBtn.setEnabled(true);
+                                           showAllBtn.setEnabled(true);
                                        }
                                    });
     }
@@ -81,7 +83,7 @@ public class WordMasterView extends JPanel {
     private void hideKeyword(SentenceTO sentenceTO) {
         String word = sentenceTO.getWord().getName();
         String english = sentenceTO.getEnglish();
-        sentenceTO.setEnglish(english.replaceAll("\\b" + word.substring(0, word.length() >> 1) + ".*?\\b", word.substring(0, 1) + "____"));
+        sentenceTO.setEnglish(english.replaceAll("(?i)\\b" + word.substring(0, (word.length()+1) >> 1) + ".*?\\b", word.substring(0, 1) + "____"));
     }
 
     private void nextButtonPressed(ActionEvent e) {
@@ -167,6 +169,10 @@ public class WordMasterView extends JPanel {
         fragmentPanel.repaint();
     }
 
+    private void showAllBtnActionPerformed(ActionEvent e) {
+        learnEnglish.setText(tos.get(idx).getEnglish());
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         learnPanel = new JPanel();
@@ -174,7 +180,7 @@ public class WordMasterView extends JPanel {
         learnEnglish = new JLabel();
         learnNavPanel = new JPanel();
         prevBtn = new JButton();
-        wordLabel = new JLabel();
+        showAllBtn = new JButton();
         nextBtn = new JButton();
         toolBar1 = new JToolBar();
         studyButton = new JButton();
@@ -215,7 +221,11 @@ public class WordMasterView extends JPanel {
                 prevBtn.setText("<");
                 prevBtn.addActionListener(e -> prevButtonPressed(e));
                 learnNavPanel.add(prevBtn, CC.xy(1, 1));
-                learnNavPanel.add(wordLabel, CC.xy(3, 1, CC.CENTER, CC.DEFAULT));
+
+                //---- showAllBtn ----
+                showAllBtn.setText(":)");
+                showAllBtn.addActionListener(e -> showAllBtnActionPerformed(e));
+                learnNavPanel.add(showAllBtn, CC.xy(3, 1));
 
                 //---- nextBtn ----
                 nextBtn.setText(">");
@@ -298,9 +308,6 @@ public class WordMasterView extends JPanel {
         bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
             this, ELProperty.create("${sentenceTO.english}"),
             learnEnglish, BeanProperty.create("text"), "englishLabel"));
-        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this, ELProperty.create("${sentenceTO.word.name}"),
-            wordLabel, BeanProperty.create("text"), "wordname"));
         bindingGroup.bind();
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
@@ -311,7 +318,7 @@ public class WordMasterView extends JPanel {
     private JLabel learnEnglish;
     private JPanel learnNavPanel;
     private JButton prevBtn;
-    private JLabel wordLabel;
+    private JButton showAllBtn;
     private JButton nextBtn;
     private JToolBar toolBar1;
     private JButton studyButton;

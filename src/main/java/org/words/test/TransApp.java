@@ -17,14 +17,17 @@ public class TransApp {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new WordMaster();
+//                    WordMaster wm = new WordMaster();
+//                    wm.initWordsSentences();
+//                    wm.initUser();
+//                    wm.initTasks();
                     JFrame frame = new JFrame("WordMaster");
                     frame.setDefaultCloseOperation(3);
                     JPanel jPanel = new WordMasterView();
                     frame.add(jPanel);
                     frame.pack();
                     frame.setVisible(true);
-                    frame.setLocation(250,250);
+                    frame.setLocation(250, 250);
                     frame.setSize(600, 250);
                 } catch (Exception e) {
                     System.err.println(e);

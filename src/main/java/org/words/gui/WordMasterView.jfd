@@ -39,12 +39,13 @@ new FormModel {
 						"gridX": 1
 						"gridY": 1
 					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "wordLabel"
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "showAllBtn"
+						"text": ":)"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showAllBtnActionPerformed", true ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
 						"gridY": 1
-						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "nextBtn"
@@ -151,9 +152,6 @@ new FormModel {
 			} )
 			addBinding( new FormBinding( "this", "${sentenceTO.english}", "learnEnglish", "text" ) {
 				"name": "englishLabel"
-			} )
-			addBinding( new FormBinding( "this", "${sentenceTO.word.name}", "wordLabel", "text" ) {
-				"name": "wordname"
 			} )
 		} )
 	}

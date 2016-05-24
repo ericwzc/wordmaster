@@ -66,7 +66,7 @@ new FormModel {
 				name: "toolBar1"
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "studyButton"
-					"text": "Start Learn"
+					"text": "Hint Mode"
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "studyButtonActionPerformed", true ) )
 				} )
 				add( new FormComponent( "javax.swing.JToolBar$Separator" ) {
@@ -74,7 +74,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "reviewBtn"
-					"text": "Start Review"
+					"text": "Assemble Mode"
 					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "reviewBtnMouseClicked", true ) )
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {

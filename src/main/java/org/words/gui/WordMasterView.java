@@ -240,13 +240,13 @@ public class WordMasterView extends JPanel {
         {
 
             //---- studyButton ----
-            studyButton.setText("Start Learn");
+            studyButton.setText("Hint Mode");
             studyButton.addActionListener(e -> studyButtonActionPerformed(e));
             toolBar1.add(studyButton);
             toolBar1.addSeparator();
 
             //---- reviewBtn ----
-            reviewBtn.setText("Start Review");
+            reviewBtn.setText("Assemble Mode");
             reviewBtn.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {

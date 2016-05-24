@@ -7,8 +7,10 @@ import net.bytebuddy.matcher.ElementMatchers;
 import org.words.common.TranDelegator;
 import org.words.common.Transactional;
 import org.words.service.PlanService;
+import org.words.service.StudyService;
 import org.words.service.TaskService;
 import org.words.service.impl.PlanServiceImpl;
+import org.words.service.impl.StudyServiceImpl;
 import org.words.service.impl.TaskServiceImpl;
 import org.words.service.UserService;
 import org.words.service.impl.UserServiceImpl;
@@ -33,6 +35,7 @@ public class ServiceRegistry {
     private static UserService userService;
     private static PlanService planService;
     private static TaskService taskService;
+    private static StudyService studyService;
 
     private static Map<Class<?>, Object> registry = new HashMap<>();
 
@@ -41,9 +44,11 @@ public class ServiceRegistry {
             userService = transactionAware(UserServiceImpl.class).newInstance();
             planService = transactionAware(PlanServiceImpl.class).newInstance();
             taskService = transactionAware(TaskServiceImpl.class).newInstance();
+            studyService = transactionAware(StudyServiceImpl.class).newInstance();
             registry.put(UserService.class, userService);
             registry.put(PlanService.class, planService);
             registry.put(TaskService.class, taskService);
+            registry.put(StudyService.class, studyService);
             registry = Collections.unmodifiableMap(registry);// readonly once initialized
         } catch (InstantiationException e) {
         } catch (IllegalAccessException e) {

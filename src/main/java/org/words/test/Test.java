@@ -4,8 +4,10 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.words.hbm.Record;
 import org.words.hbm.Sentence;
 import org.words.hbm.User;
+import org.words.hbm.Word;
 import org.words.utils.HibernateUtils;
 
 import java.util.List;
@@ -102,8 +104,31 @@ public class Test {
 		session.close();
 	}
 
+
+    public void testRecordModel(){
+        SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+        Word word = new Word("test");
+        Sentence sentence = new Sentence("english", "chinese");
+        word.addSentence(sentence);
+        session.persist(word);
+        tx.commit();
+        session.close();
+
+        session = sessionFactory.openSession();
+        tx = session.beginTransaction();
+        sentence = (Sentence) session.createQuery("from Sentence s").uniqueResult();
+        Record record = new Record();
+        record.setSentence(sentence);
+        session.persist(record);
+        tx.commit();
+        session.close();
+    }
+
 	public static void main(String[] args) throws InterruptedException {
-        new Test().testPlanUser(HibernateUtils.getSessionFactory());
+        new Test().testRecordModel();
+//        new Test().testPlanUser(HibernateUtils.getSessionFactory());
 //        TransApp.registerConverters();
 //
 //		Sentence sentence = new Sentence("english", "sdsd");

@@ -106,7 +106,6 @@ public class ConvertUtils {
 
         Sentence sentence = new Sentence("sddsds", "chinese");
         sentence.setVersion(0);
-        sentence.setTask(null);
         sentence.setId("abcd");
 
         word.addSentence(sentence);

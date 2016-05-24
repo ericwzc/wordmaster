@@ -1,8 +1,7 @@
 package org.words.hbm;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Sentence {
 	private String id;
@@ -10,8 +9,7 @@ public class Sentence {
     private String english;
     private String chinese;
     private Word word;
-    private Task task;
-
+    private Set<Record> record = new HashSet<>();
 
 	public Sentence() {
 		// this form used by Hibernate
@@ -23,7 +21,15 @@ public class Sentence {
         this.english = english;
 	}
 
-	public String getId() {
+    public Set<Record> getRecord() {
+        return record;
+    }
+
+    public void setRecord(Set<Record> record) {
+        this.record = record;
+    }
+
+    public String getId() {
 		return id;
 	}
 
@@ -61,19 +67,6 @@ public class Sentence {
 
     public void setWord(Word word) {
         this.word = word;
-    }
-
-    public Task getTask() {
-        return task;
-    }
-
-    public void setTask(Task task) {
-        this.task = task;
-    }
-
-    public void addToTask(Task task){
-        task.addSentence(this);
-        this.task = task;
     }
 
     @Override

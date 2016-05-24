@@ -59,11 +59,6 @@ public class TaskTO extends AbstractTO {
         this.id = id;
     }
 
-    public void addSentence(SentenceTO sentence){
-        sentence.setTask(this);
-        sentences.add(sentence);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

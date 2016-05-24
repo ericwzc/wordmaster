@@ -1,8 +1,6 @@
 package org.words.to;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class SentenceTO extends AbstractTO implements Cloneable{
 	private String id;
@@ -10,8 +8,7 @@ public class SentenceTO extends AbstractTO implements Cloneable{
     private String english;
     private String chinese;
     private WordTO word;
-    private TaskTO task;
-
+    private Set<RecordTO> record = new HashSet<>();
 
 	public SentenceTO() {
 		// this form used by Hibernate
@@ -23,7 +20,19 @@ public class SentenceTO extends AbstractTO implements Cloneable{
         this.english = english;
 	}
 
-	public String getId() {
+    public Set<RecordTO> getRecord() {
+        return record;
+    }
+
+    public void setRecord(Set<RecordTO> record) {
+        this.record = record;
+    }
+
+    public void addRecord(RecordTO recordTO){
+        this.record.add(recordTO);
+    }
+
+    public String getId() {
 		return id;
 	}
 
@@ -61,14 +70,6 @@ public class SentenceTO extends AbstractTO implements Cloneable{
 
     public void setWord(WordTO word) {
         this.word = word;
-    }
-
-    public TaskTO getTask() {
-        return task;
-    }
-
-    public void setTask(TaskTO task) {
-        this.task = task;
     }
 
     public Object clone() {

@@ -12,7 +12,7 @@ import org.jdesktop.beansbinding.BindingGroup;
 import org.jdesktop.beansbinding.Bindings;
 import org.jdesktop.beansbinding.ELProperty;
 import org.words.factory.ServiceRegistry;
-import org.words.service.TaskService;
+import org.words.service.StudyService;
 import org.words.to.SentenceTO;
 
 import javax.swing.*;
@@ -56,7 +56,7 @@ public class WordMasterView extends JPanel {
         SwingUtilities.invokeLater(new Runnable() {
                                        @Override
                                        public void run() {
-                                           tos = ServiceRegistry.getServiceInstance(TaskService.class).getSentences4Today();
+                                           tos = ServiceRegistry.getServiceInstance(StudyService.class).loadTasks(100, 50);
                                            learnEnglish.setText("");
                                            if (tos.size() > 0) {
                                                setSentenceTO(tos.get(0));
@@ -113,7 +113,7 @@ public class WordMasterView extends JPanel {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                tos = ServiceRegistry.getServiceInstance(TaskService.class).getSentences4Today();
+                tos = ServiceRegistry.getServiceInstance(StudyService.class).loadTasks(100, 50);
                 updateReviewBoard();
                 revNext.setEnabled(true);
                 revPrev.setEnabled(true);

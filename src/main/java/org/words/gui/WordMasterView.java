@@ -40,12 +40,13 @@ public class WordMasterView extends JPanel {
         bindingGroup.addBindingListener(new LoggingBindingListener(new JLabel()));
         learnPanel.setVisible(false);
         reviewPanel.setVisible(false);
+        studyButton.setEnabled(false);
+        reviewBtn.setEnabled(false);
     }
 
     private void studyButtonActionPerformed(ActionEvent e) {
         learnPanel.setVisible(true);
         reviewPanel.setVisible(false);
-        studyButton.setEnabled(false);
         prevBtn.setEnabled(false);
         nextBtn.setEnabled(false);
         showAllBtn.setEnabled(false);
@@ -55,8 +56,9 @@ public class WordMasterView extends JPanel {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                if(tos.isEmpty())
-                    tos = ServiceRegistry.getServiceInstance(StudyService.class).loadTasks(intValue(newNum.getText()), intValue(studiedNum.getText()));
+                if (tos.isEmpty())
+                    tos = ServiceRegistry.getServiceInstance(StudyService.class)
+                            .loadTasks(intValue(newNum.getText()), intValue(studiedNum.getText()));
                 learnEnglish.setText("");
                 if (tos.size() > 0) {
                     newNum.setEnabled(false);
@@ -65,7 +67,8 @@ public class WordMasterView extends JPanel {
                     prevBtn.setEnabled(true);
                     nextBtn.setEnabled(true);
                     showAllBtn.setEnabled(true);
-                }else{
+                }
+                else {
                     learnEnglish.setText(NOTHING_TO_LEARN_REVIEW);
                 }
             }
@@ -123,7 +126,6 @@ public class WordMasterView extends JPanel {
         studiedNum.setEnabled(false);
 
         revEnglishLabel.setText(LOADING_PLEASE_WAIT);
-        reviewBtn.setEnabled(false);
         revNext.setEnabled(false);
         revPrev.setEnabled(false);
         showAnswer.setEnabled(false);
@@ -205,6 +207,20 @@ public class WordMasterView extends JPanel {
         learnEnglish.setText(tos.get(idx).getEnglish());
     }
 
+    private void loadBtnActionPerformed(ActionEvent e) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                newNum.setEnabled(false);
+                studiedNum.setEnabled(false);
+                if(tos.isEmpty())
+                    tos = ServiceRegistry.getServiceInstance(StudyService.class).loadTasks(intValue(newNum.getText()), intValue(studiedNum.getText()));
+                studyButton.setEnabled(true);
+                reviewBtn.setEnabled(true);
+            }
+        });
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         learnPanel = new JPanel();
@@ -219,6 +235,7 @@ public class WordMasterView extends JPanel {
         reviewBtn = new JButton();
         newNum = new JTextField();
         studiedNum = new JTextField();
+        loadBtn = new JButton();
         reviewPanel = new JPanel();
         revChineseLabel = new JLabel();
         revEnglishLabel = new JLabel();
@@ -300,6 +317,12 @@ public class WordMasterView extends JPanel {
             studiedNum.setText("50");
             studiedNum.setToolTipText("N.O. of studied words to refresh");
             toolBar1.add(studiedNum);
+            toolBar1.addSeparator();
+
+            //---- loadBtn ----
+            loadBtn.setText("Load");
+            loadBtn.addActionListener(e -> loadBtnActionPerformed(e));
+            toolBar1.add(loadBtn);
         }
         add(toolBar1, CC.xy(1, 1));
 
@@ -371,6 +394,7 @@ public class WordMasterView extends JPanel {
     private JButton reviewBtn;
     private JTextField newNum;
     private JTextField studiedNum;
+    private JButton loadBtn;
     private JPanel reviewPanel;
     private JLabel revChineseLabel;
     private JLabel revEnglishLabel;

@@ -93,6 +93,14 @@ new FormModel {
 					"text": "50"
 					"toolTipText": "N.O. of studied words to refresh"
 				} )
+				add( new FormComponent( "javax.swing.JToolBar$Separator" ) {
+					name: "separator4"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "loadBtn"
+					"text": "Load"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "loadBtnActionPerformed", true ) )
+				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridY": 1
 			} )

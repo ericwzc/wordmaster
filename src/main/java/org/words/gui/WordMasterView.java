@@ -20,19 +20,18 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
 
 /**
- * @author User #1
+ * @author Eric Wang
  */
 public class WordMasterView extends JPanel {
     private static final String LOADING_PLEASE_WAIT = "Loading, please wait...";
+    private static final String NOTHING_TO_LEARN_REVIEW = "Nothing to learn/review!";
     private SentenceTO sentenceTO = new SentenceTO();
-    private LinkedList<String> words;
-    private List<SentenceTO> tos;
+    private LinkedList<String> words = new LinkedList<>();
+    private List<SentenceTO> tos = new ArrayList<>();
     private int idx = 0;
     private Object lock = new Object();
 
@@ -44,29 +43,33 @@ public class WordMasterView extends JPanel {
     }
 
     private void studyButtonActionPerformed(ActionEvent e) {
-        this.learnPanel.setVisible(true);
-        this.reviewPanel.setVisible(false);
+        learnPanel.setVisible(true);
+        reviewPanel.setVisible(false);
         studyButton.setEnabled(false);
         prevBtn.setEnabled(false);
         nextBtn.setEnabled(false);
         showAllBtn.setEnabled(false);
 
+        learnEnglish.setText(LOADING_PLEASE_WAIT);
 
         SwingUtilities.invokeLater(new Runnable() {
-                                       @Override
-                                       public void run() {
-                                           if(tos.isEmpty()) {
-                                               learnEnglish.setText(LOADING_PLEASE_WAIT);
-                                               tos = ServiceRegistry.getServiceInstance(StudyService.class).loadTasks(100, 50);
-                                           }
-                                           learnEnglish.setText("");
-                                           if (tos.size() > 0)
-                                               setSentenceTO(tos.get(0));
-                                           prevBtn.setEnabled(true);
-                                           nextBtn.setEnabled(true);
-                                           showAllBtn.setEnabled(true);
-                                       }
-                                   });
+            @Override
+            public void run() {
+                if(tos.isEmpty())
+                    tos = ServiceRegistry.getServiceInstance(StudyService.class).loadTasks(intValue(newNum.getText()), intValue(studiedNum.getText()));
+                learnEnglish.setText("");
+                if (tos.size() > 0) {
+                    newNum.setEnabled(false);
+                    studiedNum.setEnabled(false);
+                    setSentenceTO(tos.get(0));
+                    prevBtn.setEnabled(true);
+                    nextBtn.setEnabled(true);
+                    showAllBtn.setEnabled(true);
+                }else{
+                    learnEnglish.setText(NOTHING_TO_LEARN_REVIEW);
+                }
+            }
+        });
     }
 
     public SentenceTO getSentenceTO() {
@@ -84,18 +87,29 @@ public class WordMasterView extends JPanel {
     private void hideKeyword(SentenceTO sentenceTO) {
         String word = sentenceTO.getWord().getName();
         String english = sentenceTO.getEnglish();
-        sentenceTO.setEnglish(english.replaceAll("(?i)\\b" + word.substring(0, (word.length()+1) >> 1) + ".*?\\b", word.substring(0, 1) + "____"));
+        sentenceTO.setEnglish(english.replaceAll("(?i)\\b" + word.substring(0, (word.length() + 1) >> 1) + ".*?\\b", word.substring(0, 1) + "____"));
     }
 
     private void nextButtonPressed(ActionEvent e) {
         synchronized (lock) {
+            upFamilarity(idx);
             idx = (idx + 1) % tos.size();
             setSentenceTO(tos.get(idx));
         }
     }
 
+    private void upFamilarity(final int idx){
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                ServiceRegistry.getServiceInstance(StudyService.class).familarityUp(tos.get(idx));
+            }
+        });
+    }
+
     private void prevButtonPressed(ActionEvent e) {
         synchronized (lock) {
+            upFamilarity(idx);
             idx = (idx + tos.size() - 1) % tos.size();
             setSentenceTO(tos.get(idx));
         }
@@ -105,6 +119,10 @@ public class WordMasterView extends JPanel {
         reviewPanel.setVisible(true);
         learnPanel.setVisible(false);
 
+        newNum.setEnabled(false);
+        studiedNum.setEnabled(false);
+
+        revEnglishLabel.setText(LOADING_PLEASE_WAIT);
         reviewBtn.setEnabled(false);
         revNext.setEnabled(false);
         revPrev.setEnabled(false);
@@ -113,16 +131,27 @@ public class WordMasterView extends JPanel {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                if (tos.isEmpty()) {
-                    revEnglishLabel.setText(LOADING_PLEASE_WAIT);
+                if(tos.isEmpty())
                     tos = ServiceRegistry.getServiceInstance(StudyService.class).loadTasks(100, 50);
+                if(!tos.isEmpty()) {
+                    updateReviewBoard();
+                    revNext.setEnabled(true);
+                    revPrev.setEnabled(true);
+                    showAnswer.setEnabled(true);
+                }else{
+                    revEnglishLabel.setText(NOTHING_TO_LEARN_REVIEW);
                 }
-                updateReviewBoard();
-                revNext.setEnabled(true);
-                revPrev.setEnabled(true);
-                showAnswer.setEnabled(true);
             }
         });
+    }
+
+    private int intValue(String s){
+        int i = 0;
+        try {
+            i = Integer.parseInt(s);
+        }catch (NumberFormatException nfe){
+        }
+        return i;
     }
 
     private void updateReviewBoard(){
@@ -188,6 +217,8 @@ public class WordMasterView extends JPanel {
         toolBar1 = new JToolBar();
         studyButton = new JButton();
         reviewBtn = new JButton();
+        newNum = new JTextField();
+        studiedNum = new JTextField();
         reviewPanel = new JPanel();
         revChineseLabel = new JLabel();
         revEnglishLabel = new JLabel();
@@ -196,11 +227,10 @@ public class WordMasterView extends JPanel {
         revPrev = new JButton();
         showAnswer = new JButton();
         revNext = new JButton();
-        masteredBtn = new JButton();
 
         //======== this ========
         setLayout(new FormLayout(
-            "default:grow, $lcgap, default",
+            "pref:grow, $lcgap, default",
             "fill:default, $pgap, pref, $lgap, default"));
 
         //======== learnPanel ========
@@ -258,6 +288,18 @@ public class WordMasterView extends JPanel {
                 }
             });
             toolBar1.add(reviewBtn);
+            toolBar1.addSeparator();
+
+            //---- newNum ----
+            newNum.setText("100");
+            newNum.setToolTipText("N.O. of new words to learn");
+            toolBar1.add(newNum);
+            toolBar1.addSeparator();
+
+            //---- studiedNum ----
+            studiedNum.setText("50");
+            studiedNum.setToolTipText("N.O. of studied words to refresh");
+            toolBar1.add(studiedNum);
         }
         add(toolBar1, CC.xy(1, 1));
 
@@ -299,10 +341,6 @@ public class WordMasterView extends JPanel {
                 revNext.setText(">");
                 revNext.addActionListener(e -> revNextActionPerformed(e));
                 revNavPanel.add(revNext, CC.xy(5, 1));
-
-                //---- masteredBtn ----
-                masteredBtn.setText("zZ..");
-                revNavPanel.add(masteredBtn, CC.xy(7, 1));
             }
             reviewPanel.add(revNavPanel, CC.xy(1, 7));
         }
@@ -331,6 +369,8 @@ public class WordMasterView extends JPanel {
     private JToolBar toolBar1;
     private JButton studyButton;
     private JButton reviewBtn;
+    private JTextField newNum;
+    private JTextField studiedNum;
     private JPanel reviewPanel;
     private JLabel revChineseLabel;
     private JLabel revEnglishLabel;
@@ -339,7 +379,6 @@ public class WordMasterView extends JPanel {
     private JButton revPrev;
     private JButton showAnswer;
     private JButton revNext;
-    private JButton masteredBtn;
     private BindingGroup bindingGroup;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

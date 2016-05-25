@@ -101,6 +101,7 @@
                 <param name="enumClass">org.words.common.Status</param>
             </type>
         </property>
+        <property name="counter" type="int" column="COUNTER"/>
         <many-to-one name="sentence" column="SENTENCE_ID" not-null="true" unique="true"/>
     </class>
 

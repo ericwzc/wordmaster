@@ -6,6 +6,7 @@ package org.words.service;
  */
 
 import org.words.common.Transactional;
+import org.words.to.RecordTO;
 import org.words.to.SentenceTO;
 
 import java.util.List;
@@ -16,6 +17,9 @@ import java.util.List;
  **/
 public interface StudyService {
     @Transactional
-    List<SentenceTO> loadTasks(int newNum, int revNum);
+    List<SentenceTO> loadTasks(int newNum, int studiedNum);
+
+    @Transactional
+    RecordTO familarityUp(SentenceTO sentenceTO);
 }
 

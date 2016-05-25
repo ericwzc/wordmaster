@@ -24,7 +24,11 @@ public class RecordDao extends BaseDao<Record> {
     }
 
     public List<Record> load2ReviewRecords(int num) {
-        return currentSession().createQuery("FROM Record r where r.status=" + Status.STUDIED.ordinal()).setFirstResult(0).setMaxResults(num).list();
+        return currentSession().createQuery("select r FROM Record r join fetch r.sentence s join fetch s.word where r.status=" + Status.STUDIED.ordinal() + " order by r.counter").setFirstResult(0).setMaxResults(num).list();
+    }
+
+    public List<Record> loadNewRecords(){
+        return currentSession().createQuery("select r FROM Record r join fetch r.sentence s join fetch s.word where r.status=" + Status.NEW.ordinal()).list();
     }
 }
 

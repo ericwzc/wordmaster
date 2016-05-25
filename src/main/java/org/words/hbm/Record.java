@@ -17,9 +17,18 @@ public class Record {
     private int version;
     private Status status;
     private Sentence sentence;
+    private int counter;
 
     public Record(){
         status = Status.NEW;
+    }
+
+    public int getCounter() {
+        return counter;
+    }
+
+    public void setCounter(int counter) {
+        this.counter = counter;
     }
 
     public String getId() {

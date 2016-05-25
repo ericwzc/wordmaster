@@ -17,6 +17,15 @@ public class RecordTO extends AbstractTO{
     private int version;
     private Status status;
     private SentenceTO sentence;
+    private int counter;
+
+    public int getCounter() {
+        return counter;
+    }
+
+    public void setCounter(int counter) {
+        this.counter = counter;
+    }
 
     public String getId() {
         return id;

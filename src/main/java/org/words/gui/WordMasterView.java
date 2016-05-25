@@ -63,7 +63,7 @@ public class WordMasterView extends JPanel {
                 if (tos.size() > 0) {
                     newNum.setEnabled(false);
                     studiedNum.setEnabled(false);
-                    setSentenceTO(tos.get(0));
+                    setSentenceTO(tos.get(idx));
                     prevBtn.setEnabled(true);
                     nextBtn.setEnabled(true);
                     showAllBtn.setEnabled(true);
@@ -133,14 +133,14 @@ public class WordMasterView extends JPanel {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                if(tos.isEmpty())
+                if (tos.isEmpty())
                     tos = ServiceRegistry.getServiceInstance(StudyService.class).loadTasks(100, 50);
-                if(!tos.isEmpty()) {
+                if (!tos.isEmpty()) {
                     updateReviewBoard();
                     revNext.setEnabled(true);
                     revPrev.setEnabled(true);
                     showAnswer.setEnabled(true);
-                }else{
+                } else {
                     revEnglishLabel.setText(NOTHING_TO_LEARN_REVIEW);
                 }
             }
@@ -208,12 +208,13 @@ public class WordMasterView extends JPanel {
     }
 
     private void loadBtnActionPerformed(ActionEvent e) {
+        newNum.setEnabled(false);
+        studiedNum.setEnabled(false);
+        loadBtn.setEnabled(false);
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                newNum.setEnabled(false);
-                studiedNum.setEnabled(false);
-                if(tos.isEmpty())
+                if (tos.isEmpty())
                     tos = ServiceRegistry.getServiceInstance(StudyService.class).loadTasks(intValue(newNum.getText()), intValue(studiedNum.getText()));
                 studyButton.setEnabled(true);
                 reviewBtn.setEnabled(true);

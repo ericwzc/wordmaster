@@ -1,5 +1,7 @@
 package org.words.test;
 
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,10 +10,9 @@ import org.words.dao.WordDao;
 import org.words.hbm.*;
 import org.words.utils.HibernateUtils;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -187,10 +188,18 @@ public class Test {
         sf.close();
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    static void play() throws JavaLayerException, IOException {
+        InputStream is = new URL("http://media.merriam-webster.com/audio/prons/en/us/mp3/t/turtle01.mp3").openConnection().getInputStream();
+        BufferedInputStream buffer = new BufferedInputStream(is);
+        Player player = new Player(buffer);
+        player.play();
+    }
+
+    public static void main(String[] args) throws InterruptedException, IOException, JavaLayerException {
         //		Word word = new Word("conjunction");
         //		new WordMaster().fetchSentence(true, word);
-        new Test().testMeaning();
+//        new Test().testMeaning();
+        play();
         //        new Test().testPlanUser(HibernateUtils.getSessionFactory());
         //        TransApp.registerConverters();
         //

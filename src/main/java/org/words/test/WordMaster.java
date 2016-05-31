@@ -9,6 +9,7 @@ package org.words.test;
 
 import org.words.dao.WordDao;
 import org.words.factory.ServiceRegistry;
+import org.words.hbm.Meaning;
 import org.words.hbm.Sentence;
 import org.words.hbm.Word;
 import org.words.service.UserService;
@@ -186,8 +187,7 @@ public class WordMaster {
         }
     }
 
-    private void fetchSentence(boolean useProxy, Word word) {
-
+    public void fetchSentence(boolean useProxy, Word word) {
         BufferedReader br = null;
         try {
             URL url = new URL("http://www.iciba.com/" + word.getName());
@@ -201,29 +201,51 @@ public class WordMaster {
             br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), UTF_8));
 
             String inputLine;
-            boolean startRecord = false;
             Sentence sentence = null;
+            Meaning meaning = null;
+            StringBuilder sb = null;
+            boolean trackMeaning = false;
+            boolean attention = false;
+
             while ((inputLine = br.readLine()) != null) {
-                if (inputLine.contains("<section class='result-collins page-section'>")) {
-                    startRecord = true;
+                System.out.println(inputLine);
+
+                if (inputLine.contains("<span class='method-order'>")) {
+                    sentence = null;
+                    attention = true;
                 }
-                if (startRecord && inputLine.contains("</section>")) {
-                    break;
+
+                if(!attention)
+                    continue;
+
+                if (inputLine.contains("<p class='method-explain'>")) {
+                    sb = new StringBuilder();
+                    trackMeaning = true;
                 }
-                if (startRecord) {
-                    Matcher matcher = PATTERN.matcher(inputLine);
-                    if (matcher.matches()) {
-                        String txt = matcher.group(1);
-                        if (!txt.isEmpty()) {
-                            if (sentence == null) {
-                                sentence = new Sentence();
-                                sentence.setEnglish(txt);
-                            }
-                            else {
-                                sentence.setChinese(txt);
-                                word.addSentence(sentence);
-                                sentence = null;
-                            }
+
+                if (trackMeaning){
+                    if(!inputLine.contains("<ul class='method-list'>")){
+                        sb.append(inputLine.trim());
+                    }else{
+                        meaning = new Meaning(sb.toString());
+                        trackMeaning = false;
+                    }
+                    continue;
+                }
+
+                Matcher matcher = PATTERN.matcher(inputLine);
+                if (matcher.matches()) {
+                    String txt = matcher.group(1);
+                    if (!txt.isEmpty()) {
+                        if (sentence == null) {
+                            sentence = new Sentence();
+                            sentence.setEnglish(txt);
+                            meaning.addSentence(sentence);
+                        }
+                        else {
+                            sentence.setChinese(txt);
+                            word.addSentence(sentence);
+                            sentence = null;
                         }
                     }
                 }
@@ -242,7 +264,6 @@ public class WordMaster {
                 }
             }
         }
-
     }
 
     /** Call this to load word and sentences into database **/

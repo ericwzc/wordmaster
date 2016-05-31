@@ -54,7 +54,7 @@
         <!-- Drop and re-create the database schema on startup -->
         <!--<property name="hbm2ddl.auto">create-drop</property>-->
 
-        <property name="current_session_context_class">thread</property>
+        <!--<property name="current_session_context_class">thread</property>-->
 
         <mapping resource="Word.hbm.xml"/>
 

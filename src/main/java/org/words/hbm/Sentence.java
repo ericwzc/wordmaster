@@ -9,6 +9,7 @@ public class Sentence {
     private String english;
     private String chinese;
     private Word word;
+    private Meaning meaning;
     private Set<Record> record = new HashSet<>();
 
 	public Sentence() {
@@ -20,6 +21,14 @@ public class Sentence {
         this.chinese = chinese;
         this.english = english;
 	}
+
+    public Meaning getMeaning() {
+        return meaning;
+    }
+
+    public void setMeaning(Meaning meaning) {
+        this.meaning = meaning;
+    }
 
     public Set<Record> getRecord() {
         return record;

@@ -8,6 +8,7 @@ public class SentenceTO extends AbstractTO implements Cloneable{
     private String english;
     private String chinese;
     private WordTO word;
+    private MeaningTO meaning;
     private Set<RecordTO> record = new HashSet<>();
 
 	public SentenceTO() {
@@ -19,6 +20,14 @@ public class SentenceTO extends AbstractTO implements Cloneable{
         this.chinese = chinese;
         this.english = english;
 	}
+
+    public MeaningTO getMeaning() {
+        return meaning;
+    }
+
+    public void setMeaning(MeaningTO meaning) {
+        this.meaning = meaning;
+    }
 
     public Set<RecordTO> getRecord() {
         return record;

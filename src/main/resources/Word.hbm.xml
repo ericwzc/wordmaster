@@ -20,6 +20,7 @@
         </set>
 
         <many-to-one name="word" class="Word" column="WORD_ID" not-null="true"/>
+        <many-to-one name="meaning" class="Meaning" column="MEANING_ID" not-null="true"/>
         <!--<join table="TASKS_SENTENCES" optional="true">-->
             <!--<key column="SENTENCE_ID"/>-->
             <!--<many-to-one name="task" column="TASK_ID" not-null="true" />-->
@@ -55,6 +56,18 @@
         <property name="name" type="string" column="NAME" not-null="true"/>
         <set name="sentences" inverse="true" cascade="save-update">
             <key column="WORD_ID" />
+            <one-to-many class="Sentence" />
+        </set>
+    </class>
+
+    <class name="Meaning" table="MEANINGS">
+        <id name="id" type="string" column="MEANING_ID">
+            <generator class="uuid"/>
+        </id>
+        <version name="version" access="field" column="OBJ_VERSION" />
+        <property name="txt"  type="string" column="TXT" not-null="true" length="1000"/>
+        <set name="sentences" inverse="true" cascade="save-update">
+            <key column="MEANING_ID"></key>
             <one-to-many class="Sentence" />
         </set>
     </class>

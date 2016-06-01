@@ -9,8 +9,8 @@ new FormModel {
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-				"$columnSpecs": "default:grow, labelcompgap, default"
-				"$rowSpecs": "default, pargap, default, pargap, default"
+				"$columnSpecs": "center:default:grow, labelcompgap, default"
+				"$rowSpecs": "default, pargap, default, pargap, default, linegap, default, linegap, default"
 			} ) {
 				name: "learnPanel"
 				add( new FormComponent( "javax.swing.JLabel" ) {
@@ -25,6 +25,11 @@ new FormModel {
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridY": 3
 					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "meaningLabel"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 5
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 					"$columnSpecs": "pref:grow, labelcompgap, default:grow, labelcompgap, 27dlu:grow"
@@ -56,7 +61,7 @@ new FormModel {
 						"gridX": 5
 					} )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridY": 5
+					"gridY": 7
 					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
@@ -166,7 +171,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 695, 295 )
+			"size": new java.awt.Dimension( 695, 350 )
 		} )
 		addBindingGroup( new FormBindingGroup( class org.jdesktop.beansbinding.BindingGroup ) {
 			"name": "bindingGroup"

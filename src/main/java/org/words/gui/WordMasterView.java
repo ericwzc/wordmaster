@@ -26,6 +26,7 @@ import java.util.List;
 /**
  * @author Eric Wang
  */
+@SuppressWarnings ({ "UnusedParameters", "Convert2Lambda", "Convert2MethodRef", "FieldCanBeLocal" })
 public class WordMasterView extends JPanel {
     private static final String LOADING_PLEASE_WAIT = "Loading, please wait...";
     private static final String NOTHING_TO_LEARN_REVIEW = "Nothing to learn/review!";
@@ -33,7 +34,7 @@ public class WordMasterView extends JPanel {
     private LinkedList<String> words = new LinkedList<>();
     private List<SentenceTO> tos = new ArrayList<>();
     private int idx = 0;
-    private Object lock = new Object();
+    private final Object lock = new Object();
 
     public WordMasterView() {
         initComponents();
@@ -94,6 +95,7 @@ public class WordMasterView extends JPanel {
     }
 
     private void nextButtonPressed(ActionEvent e) {
+        meaningLabel.setText("");
         synchronized (lock) {
             upFamilarity(idx);
             idx = (idx + 1) % tos.size();
@@ -111,6 +113,7 @@ public class WordMasterView extends JPanel {
     }
 
     private void prevButtonPressed(ActionEvent e) {
+        meaningLabel.setText("");
         synchronized (lock) {
             upFamilarity(idx);
             idx = (idx + tos.size() - 1) % tos.size();
@@ -151,7 +154,7 @@ public class WordMasterView extends JPanel {
         int i = 0;
         try {
             i = Integer.parseInt(s);
-        }catch (NumberFormatException nfe){
+        }catch (NumberFormatException ignored){
         }
         return i;
     }
@@ -205,6 +208,7 @@ public class WordMasterView extends JPanel {
 
     private void showAllBtnActionPerformed(ActionEvent e) {
         learnEnglish.setText(tos.get(idx).getEnglish());
+        meaningLabel.setText("<html>" + getSentenceTO().getMeaning().getTxt() + "</html>");
     }
 
     private void loadBtnActionPerformed(ActionEvent e) {
@@ -227,6 +231,7 @@ public class WordMasterView extends JPanel {
         learnPanel = new JPanel();
         learnChinese = new JLabel();
         learnEnglish = new JLabel();
+        meaningLabel = new JLabel();
         learnNavPanel = new JPanel();
         prevBtn = new JButton();
         showAllBtn = new JButton();
@@ -254,14 +259,15 @@ public class WordMasterView extends JPanel {
         //======== learnPanel ========
         {
             learnPanel.setLayout(new FormLayout(
-                "default:grow, $lcgap, default",
-                "2*(default, $pgap), default"));
+                "center:default:grow, $lcgap, default",
+                "2*(default, $pgap), 2*(default, $lgap), default"));
             learnPanel.add(learnChinese, CC.xy(1, 1, CC.CENTER, CC.DEFAULT));
 
             //---- learnEnglish ----
             learnEnglish.setText("text");
             learnEnglish.setFont(new Font("Segoe UI", Font.PLAIN, 16));
             learnPanel.add(learnEnglish, CC.xy(1, 3, CC.CENTER, CC.DEFAULT));
+            learnPanel.add(meaningLabel, CC.xy(1, 5));
 
             //======== learnNavPanel ========
             {
@@ -284,7 +290,7 @@ public class WordMasterView extends JPanel {
                 nextBtn.addActionListener(e -> nextButtonPressed(e));
                 learnNavPanel.add(nextBtn, CC.xy(5, 1, CC.CENTER, CC.DEFAULT));
             }
-            learnPanel.add(learnNavPanel, CC.xy(1, 5, CC.CENTER, CC.DEFAULT));
+            learnPanel.add(learnNavPanel, CC.xy(1, 7, CC.CENTER, CC.DEFAULT));
         }
         add(learnPanel, CC.xy(1, 5));
 
@@ -386,6 +392,7 @@ public class WordMasterView extends JPanel {
     private JPanel learnPanel;
     private JLabel learnChinese;
     private JLabel learnEnglish;
+    private JLabel meaningLabel;
     private JPanel learnNavPanel;
     private JButton prevBtn;
     private JButton showAllBtn;

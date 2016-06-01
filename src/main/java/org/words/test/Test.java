@@ -198,8 +198,8 @@ public class Test {
     public static void main(String[] args) throws InterruptedException, IOException, JavaLayerException {
         //		Word word = new Word("conjunction");
         //		new WordMaster().fetchSentence(true, word);
-//        new Test().testMeaning();
-        play();
+        new Test().testMeaning();
+//        play();
         //        new Test().testPlanUser(HibernateUtils.getSessionFactory());
         //        TransApp.registerConverters();
         //

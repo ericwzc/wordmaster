@@ -208,7 +208,7 @@ public class WordMaster {
             boolean attention = false;
 
             while ((inputLine = br.readLine()) != null) {
-                System.out.println(inputLine);
+//                System.out.println(inputLine);
 
                 if (inputLine.contains("<span class='method-order'>")) {
                     sentence = null;

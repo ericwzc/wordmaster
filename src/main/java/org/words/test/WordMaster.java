@@ -32,7 +32,8 @@ public class WordMaster {
     private static final Pattern PATTERN = Pattern.compile("^.*<p>(.*)</p>.*$");
     private static final Pattern PATTERN_MP3 = Pattern.compile("(?m)^.*data-file=\"([^\"]+)\".*data-dir=\"(\\w+)\".*");
 
-    private static Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxy2.de.signintra.com", 80));
+//    private static Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxy2.de.signintra.com", 80));
+    private static Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("sscproxy.ap.signintra.com", 80));
 
     private static Pattern letterPattern = Pattern.compile("<li class=\"currentpage\"><span>(.*?)</span></li>");
     private static Pattern pagePattern = Pattern.compile("<li class=\"activepage\"><span>(.*?)</span></li>");
@@ -210,6 +211,7 @@ public class WordMaster {
                                 matcher.group(2) + "/" + matcher.group(1) + ".mp3";
 
                         System.out.println(targetUrl);
+                        loadMp3(word + ".mp3", targetUrl);
                         break;
                     }
                 }
@@ -223,6 +225,38 @@ public class WordMaster {
             if (br != null) {
                 try {
                     br.close();
+                }
+                catch (IOException e) {
+                }
+            }
+        }
+    }
+
+    private void loadMp3(String word, String targetUrl) {
+        BufferedInputStream bi = null;
+        BufferedOutputStream bo = null;
+        try {
+            bi = new BufferedInputStream(new URL(targetUrl).openConnection(proxy).getInputStream());
+            bo = new BufferedOutputStream(new FileOutputStream(word));
+
+            int i;
+            while((i = bi.read()) != -1){
+                bo.write(i);
+            }
+        }
+        catch (IOException e) {
+        }
+        finally {
+            if (bi != null) {
+                try {
+                    bi.close();
+                }
+                catch (IOException e) {
+                }
+            }
+            if(bo != null){
+                try {
+                    bo.close();
                 }
                 catch (IOException e) {
                 }
@@ -328,6 +362,30 @@ public class WordMaster {
         }
         finally {
             if (br != null) {
+                try {
+                    br.close();
+                }
+                catch (IOException e) {
+                }
+            }
+        }
+    }
+
+    void downloadMp3s(){
+       BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(getClass().getResource("/ielts.txt").getFile()));
+            String line = null;
+            while((line = br.readLine()) != null){
+               fetchMp3Url(true, line.trim());
+            }
+        }
+        catch (FileNotFoundException e) {
+        }
+        catch (IOException e) {
+        }
+        finally {
+            if(br != null){
                 try {
                     br.close();
                 }

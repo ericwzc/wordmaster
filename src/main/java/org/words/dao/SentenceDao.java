@@ -15,7 +15,7 @@ public class SentenceDao extends BaseDao<Sentence> {
 
     public List<Sentence> getNewSentences(int num){
         List<String> selected = currentSession().createQuery("select s.id from Sentence s where s.record is EMPTY order by s.english").setFirstResult(0).setMaxResults(num).list();
-        List<Sentence> result = currentSession().createQuery("select s from Sentence s join fetch s.word where s.id in (:selected)").setParameterList("selected", selected).list();
+        List<Sentence> result = currentSession().createQuery("select s from Sentence s join fetch s.word join fetch s.meaning where s.id in (:selected)").setParameterList("selected", selected).list();
         return result;
     }
 }

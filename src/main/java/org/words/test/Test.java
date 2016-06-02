@@ -196,7 +196,7 @@ public class Test {
     }
 
     public static void main(String[] args) throws InterruptedException, IOException, JavaLayerException {
-        new WordMaster().fetchMp3Url(false, "turtle");
+        new WordMaster().downloadMp3s();
         //		Word word = new Word("conjunction");
         //		new WordMaster().fetchSentence(true, word);
 //        new Test().testMeaning();

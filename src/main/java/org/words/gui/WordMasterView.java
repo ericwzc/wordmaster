@@ -6,6 +6,8 @@ package org.words.gui;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
 import org.jdesktop.beansbinding.BeanProperty;
 import org.jdesktop.beansbinding.BindingGroup;
@@ -20,6 +22,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.List;
 
@@ -35,6 +41,7 @@ public class WordMasterView extends JPanel {
     private List<SentenceTO> tos = new ArrayList<>();
     private int idx = 0;
     private final Object lock = new Object();
+    private String mp3Path = System.getProperty("user.home")+ File.separator+ "mp3" + File.separator;
 
     public WordMasterView() {
         initComponents();
@@ -143,7 +150,8 @@ public class WordMasterView extends JPanel {
                     revNext.setEnabled(true);
                     revPrev.setEnabled(true);
                     showAnswer.setEnabled(true);
-                } else {
+                }
+                else {
                     revEnglishLabel.setText(NOTHING_TO_LEARN_REVIEW);
                 }
             }
@@ -219,9 +227,25 @@ public class WordMasterView extends JPanel {
             @Override
             public void run() {
                 if (tos.isEmpty())
-                    tos = ServiceRegistry.getServiceInstance(StudyService.class).loadTasks(intValue(newNum.getText()), intValue(studiedNum.getText()));
+                    tos = ServiceRegistry.getServiceInstance(StudyService.class)
+                            .loadTasks(intValue(newNum.getText()), intValue(studiedNum.getText()));
                 studyButton.setEnabled(true);
                 reviewBtn.setEnabled(true);
+            }
+        });
+    }
+
+    private void listenActionPerformed(ActionEvent e) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    new Player(new BufferedInputStream(new FileInputStream(mp3Path + getSentenceTO().getWord().getName() + ".mp3"))).play();
+                }
+                catch (JavaLayerException e1) {
+                }
+                catch (FileNotFoundException e1) {
+                }
             }
         });
     }
@@ -236,6 +260,7 @@ public class WordMasterView extends JPanel {
         prevBtn = new JButton();
         showAllBtn = new JButton();
         nextBtn = new JButton();
+        listen = new JButton();
         toolBar1 = new JToolBar();
         studyButton = new JButton();
         reviewBtn = new JButton();
@@ -272,7 +297,7 @@ public class WordMasterView extends JPanel {
             //======== learnNavPanel ========
             {
                 learnNavPanel.setLayout(new FormLayout(
-                    "pref:grow, $lcgap, default:grow, $lcgap, 27dlu:grow",
+                    "pref:grow, $lcgap, default:grow, 2*($lcgap, default)",
                     "default"));
 
                 //---- prevBtn ----
@@ -289,6 +314,11 @@ public class WordMasterView extends JPanel {
                 nextBtn.setText(">");
                 nextBtn.addActionListener(e -> nextButtonPressed(e));
                 learnNavPanel.add(nextBtn, CC.xy(5, 1, CC.CENTER, CC.DEFAULT));
+
+                //---- listen ----
+                listen.setText("#");
+                listen.addActionListener(e -> listenActionPerformed(e));
+                learnNavPanel.add(listen, CC.xy(7, 1));
             }
             learnPanel.add(learnNavPanel, CC.xy(1, 7, CC.CENTER, CC.DEFAULT));
         }
@@ -397,6 +427,7 @@ public class WordMasterView extends JPanel {
     private JButton prevBtn;
     private JButton showAllBtn;
     private JButton nextBtn;
+    private JButton listen;
     private JToolBar toolBar1;
     private JButton studyButton;
     private JButton reviewBtn;

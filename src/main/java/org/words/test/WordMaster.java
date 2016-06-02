@@ -30,6 +30,7 @@ public class WordMaster {
     private static final String UTF_8 = "UTF-8";
     private static final byte[] NL = "\n".getBytes(Charset.forName(UTF_8));
     private static final Pattern PATTERN = Pattern.compile("^.*<p>(.*)</p>.*$");
+    private static final Pattern PATTERN_MP3 = Pattern.compile("(?m)^.*data-file=\"([^\"]+)\".*data-dir=\"(\\w+)\".*");
 
     private static Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxy2.de.signintra.com", 80));
 
@@ -184,6 +185,48 @@ public class WordMaster {
                 sc.close();
             }
             return result;
+        }
+    }
+
+    public void fetchMp3Url(boolean useProxy, String word){
+        BufferedReader br = null;
+        try {
+            URL url = new URL("http://www.merriam-webster.com/dictionary/" + word);
+            URLConnection urlConnection = null;
+            if (useProxy) {
+                urlConnection = url.openConnection(proxy);
+            }
+            else {
+                urlConnection = url.openConnection();
+            }
+            br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), UTF_8));
+
+            String inputLine;
+            while ((inputLine = br.readLine()) != null) {
+                if (inputLine.contains("<a class=\"play-pron\"")) {
+                    Matcher matcher = PATTERN_MP3.matcher(inputLine.trim());
+                    if (matcher.matches()) {
+                        String targetUrl = "http://media.merriam-webster.com/audio/prons/en/us/mp3/" +
+                                matcher.group(2) + "/" + matcher.group(1) + ".mp3";
+
+                        System.out.println(targetUrl);
+                        break;
+                    }
+                }
+            }
+        }
+        catch (UnsupportedEncodingException e) {
+        }
+        catch (IOException e) {
+        }
+        finally {
+            if (br != null) {
+                try {
+                    br.close();
+                }
+                catch (IOException e) {
+                }
+            }
         }
     }
 

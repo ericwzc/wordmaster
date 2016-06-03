@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "5.2.2.2.228" Java: "1.8.0_40" encoding: "UTF-8"
+JFDML JFormDesigner: "5.2.2.2.228" Java: "1.8.0_45" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -92,6 +92,11 @@ new FormModel {
 				} )
 				add( new FormComponent( "javax.swing.JToolBar$Separator" ) {
 					name: "separator2"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "listenBtn"
+					"text": "Listen Mode"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "listenBtnActionPerformed", true ) )
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
 					name: "newNum"

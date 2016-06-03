@@ -42,17 +42,21 @@ public class WordMasterView extends JPanel {
     private int idx = 0;
     private final Object lock = new Object();
     private String mp3Path = System.getProperty("user.home")+ File.separator+ "mp3" + File.separator;
+    private Thread t;
 
     public WordMasterView() {
         initComponents();
-        bindingGroup.addBindingListener(new LoggingBindingListener(new JLabel()));
+//        bindingGroup.addBindingListener(new LoggingBindingListener(new JLabel()));
         learnPanel.setVisible(false);
         reviewPanel.setVisible(false);
         studyButton.setEnabled(false);
         reviewBtn.setEnabled(false);
+        listenBtn.setEnabled(false);
     }
 
     private void studyButtonActionPerformed(ActionEvent e) {
+        if(t != null && t.isAlive())
+            t.interrupt();
         learnPanel.setVisible(true);
         reviewPanel.setVisible(false);
         prevBtn.setEnabled(false);
@@ -129,6 +133,8 @@ public class WordMasterView extends JPanel {
     }
 
     private void reviewBtnMouseClicked(MouseEvent e) {
+        if(t != null && t.isAlive())
+            t.interrupt();
         reviewPanel.setVisible(true);
         learnPanel.setVisible(false);
 
@@ -231,6 +237,7 @@ public class WordMasterView extends JPanel {
                             .loadTasks(intValue(newNum.getText()), intValue(studiedNum.getText()));
                 studyButton.setEnabled(true);
                 reviewBtn.setEnabled(true);
+                listenBtn.setEnabled(true);
             }
         });
     }
@@ -239,16 +246,42 @@ public class WordMasterView extends JPanel {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                try {
-                    new Player(new BufferedInputStream(new FileInputStream(mp3Path + getSentenceTO().getWord().getName() + ".mp3"))).play();
-                }
-                catch (JavaLayerException e1) {
-                }
-                catch (FileNotFoundException e1) {
-                }
+                play(getSentenceTO().getWord().getName());
             }
         });
     }
+
+    private void play(String wordName) {
+        try {
+            new Player(new BufferedInputStream(new FileInputStream(mp3Path + wordName + ".mp3"))).play();
+        } catch (JavaLayerException e) {
+        } catch (FileNotFoundException e) {
+        }
+    }
+
+    private void listenBtnActionPerformed(ActionEvent e) {
+        Random r = new Random(47);
+        t = new Thread(new Runnable() {
+            List<SentenceTO> tts;
+            {
+                tts = Collections.unmodifiableList(tos);
+            }
+            @Override
+            public void run() {
+                try {
+                    while (!Thread.interrupted()) {
+                        play(tts.get(r.nextInt(tts.size())).getWord().getName());
+                        Thread.sleep(3000);
+                    }
+                } catch (InterruptedException e1) {
+                }
+            }
+        });
+
+        t.setDaemon(true);
+        t.start();
+    }
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -264,6 +297,7 @@ public class WordMasterView extends JPanel {
         toolBar1 = new JToolBar();
         studyButton = new JButton();
         reviewBtn = new JButton();
+        listenBtn = new JButton();
         newNum = new JTextField();
         studiedNum = new JTextField();
         loadBtn = new JButton();
@@ -343,6 +377,11 @@ public class WordMasterView extends JPanel {
             });
             toolBar1.add(reviewBtn);
             toolBar1.addSeparator();
+
+            //---- listenBtn ----
+            listenBtn.setText("Listen Mode");
+            listenBtn.addActionListener(e -> listenBtnActionPerformed(e));
+            toolBar1.add(listenBtn);
 
             //---- newNum ----
             newNum.setText("100");
@@ -431,6 +470,7 @@ public class WordMasterView extends JPanel {
     private JToolBar toolBar1;
     private JButton studyButton;
     private JButton reviewBtn;
+    private JButton listenBtn;
     private JTextField newNum;
     private JTextField studiedNum;
     private JButton loadBtn;

@@ -384,7 +384,7 @@ public class WordMasterView extends JPanel {
             toolBar1.add(listenBtn);
 
             //---- newNum ----
-            newNum.setText("100");
+            newNum.setText("50");
             newNum.setToolTipText("N.O. of new words to learn");
             toolBar1.add(newNum);
             toolBar1.addSeparator();

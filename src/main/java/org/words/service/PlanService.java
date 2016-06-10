@@ -4,14 +4,15 @@ import org.words.common.Transactional;
 import org.words.to.PlanTO;
 
 /**
- * Created by Eric on 2016/3/17.
+ * Plan service interface
  */
-public interface PlanService {
+public interface PlanService {//NOSONAR
     /**
      * Get the first plan only
-     * @param userName
-     * @return
+     * @param userName user name
+     * @return first Plan
      */
+    @SuppressWarnings("unused")
     @Transactional
     PlanTO getPlan(String userName);
 }

@@ -8,7 +8,7 @@ import org.words.to.UserTO;
 import org.words.utils.ConvertUtils;
 
 /**
- * Created by Eric on 2016/4/4.
+ * User service impl
  */
 public class UserServiceImpl implements UserService{
 

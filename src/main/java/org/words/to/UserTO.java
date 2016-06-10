@@ -1,9 +1,4 @@
 package org.words.to;
-/**
- * @COPYRIGHT (C) 2016 Schenker AG
- * <p/>
- * All rights reserved
- */
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,9 +14,14 @@ public class UserTO extends AbstractTO {
     private Integer version;
     private Set<PlanTO> plans = new HashSet<>();
 
-    public UserTO() {
+    public UserTO() { // intentionally blank
     }
 
+    /**
+     * Constructor, set name
+     *
+     * @param name user name
+     */
     public UserTO(String name) {
         this.name = name;
     }
@@ -34,6 +34,11 @@ public class UserTO extends AbstractTO {
         this.plans = plans;
     }
 
+    /**
+     * Convenience method for bidirectional relationship
+     *
+     * @param plan plan to
+     */
     public void addPlan(PlanTO plan){
         plan.setUser(this);
         plans.add(plan);
@@ -65,8 +70,11 @@ public class UserTO extends AbstractTO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         UserTO userTO = (UserTO) o;
 

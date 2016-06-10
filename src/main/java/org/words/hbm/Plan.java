@@ -1,9 +1,4 @@
 package org.words.hbm;
-/**
- * @COPYRIGHT (C) 2016 Schenker AG
- * <p/>
- * All rights reserved
- */
 
 import java.util.Date;
 import java.util.HashSet;
@@ -11,8 +6,9 @@ import java.util.Set;
 
 /**
  * Plan entity
- @author Eric Wang
+ * @author Eric Wang
  **/
+@SuppressWarnings("unused")
 public class Plan {
     private String id;
     private int version;
@@ -21,25 +17,40 @@ public class Plan {
     private User user;
     private Set<Task> tasks = new HashSet<>();
 
-    public Set<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(Set<Task> tasks) {
-        this.tasks = tasks;
-    }
-
-    public void addTask(Task task) {
-        task.setPlan(this);
-        tasks.add(task);
-    }
-
+    /**
+     * Cosntructor with start date and learn number
+     *
+     * @param startDate start date
+     * @param number number to learn
+     */
     public Plan(Date startDate, int number) {
         this.startDate = startDate;
         this.number = number;
     }
 
     public Plan() {
+        // used by hibernate
+    }
+
+    @SuppressWarnings("unused")
+    public Set<Task> getTasks() {
+        return tasks;
+    }
+
+    @SuppressWarnings("unused")
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    /**
+     * Convenience method for bidirectional relation
+     *
+     * @param task task entity
+     */
+    @SuppressWarnings("unused")
+    public void addTask(Task task) {
+        task.setPlan(this);
+        tasks.add(task);
     }
 
     public User getUser() {
@@ -78,19 +89,24 @@ public class Plan {
         return id;
     }
 
-    private void setId(String id) {
+    private void setId(String id) {//NOSONAR
         this.id = id;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         Plan plan = (Plan) o;
 
-        if (number != plan.number) return false;
-        if (startDate != null ? !startDate.equals(plan.startDate) : plan.startDate != null) return false;
+        if (number != plan.number)
+            return false;
+        //noinspection SimplifiableIfStatement
+        if (startDate != null ? !startDate.equals(plan.startDate) : plan.startDate != null)
+            return false;
         return !(user != null ? !user.equals(plan.user) : plan.user != null);
 
     }

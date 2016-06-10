@@ -1,9 +1,4 @@
 package org.words.hbm;
-/**
- * @COPYRIGHT (C) 2016 Schenker AG
- * <p>
- * All rights reserved
- */
 
 import org.words.common.Status;
 
@@ -19,6 +14,9 @@ public class Record {
     private Sentence sentence;
     private int counter;
 
+    /**
+     * Default contructor with default status
+     */
     public Record(){
         status = Status.NEW;
     }
@@ -73,9 +71,7 @@ public class Record {
 
         Record record = (Record) o;
 
-        if (status != record.status)
-            return false;
-        return sentence.equals(record.sentence);
+        return status == record.status && sentence.equals(record.sentence);
 
     }
 

@@ -1,25 +1,28 @@
 package org.words.hbm;
-/**
- * @COPYRIGHT (C) 2016 Schenker AG
- * <p/>
- * All rights reserved
- */
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Word Entity
- @author Eric Wang
+ * @author Eric Wang
  **/
+@SuppressWarnings("unused")
 public class Word {
     private String id;
     private Set<Sentence> sentences = new HashSet<>();
     private int version;
     private String name;
 
-    public Word(){}
+    public Word(){
+        // default
+    }
 
+    /**
+     *  Constructor to set name
+     *
+     * @param name word name
+     */
     public Word(String name){
         this.name = name;
     }
@@ -56,6 +59,11 @@ public class Word {
         this.version = version;
     }
 
+    /**
+     * Convenience method for bidirectional relation
+     *
+     * @param sentence sentence entity
+     */
     public void addSentence(Sentence sentence){
         sentence.setWord(this);
         sentences.add(sentence);
@@ -63,8 +71,10 @@ public class Word {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         Word word = (Word) o;
 

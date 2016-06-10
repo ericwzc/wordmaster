@@ -1,9 +1,4 @@
 package org.words.service.impl;
-/**
- * @COPYRIGHT (C) 2016 Schenker AG
- * <p>
- * All rights reserved
- */
 
 import org.words.common.Status;
 import org.words.common.Transactional;
@@ -56,13 +51,22 @@ public class StudyServiceImpl implements StudyService {
         return result;
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     @Transactional
     @Override
-    public RecordTO familarityUp(SentenceTO sentenceTO) {
+    public void familarityUp(SentenceTO sentenceTO) {
         Record record = recordDao.get(Record.class, sentenceTO.getRecord().iterator().next().getId());
         record.setStatus(Status.STUDIED);
         record.setCounter(record.getCounter() + 1);
-        return ConvertUtils.convert(record, RecordTO.class);
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    @Transactional
+    @Override
+    public void familarityDown(SentenceTO sentenceTO) {
+        Record record = recordDao.get(Record.class, sentenceTO.getRecord().iterator().next().getId());
+        record.setStatus(Status.STUDIED);
+        record.setCounter(record.getCounter() - 1);
     }
 
     private void addRecord(List<SentenceTO> tos, List<Record> entities){

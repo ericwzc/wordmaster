@@ -1,17 +1,13 @@
 package org.words.hbm;
-/**
- * @COPYRIGHT (C) 2016 Schenker AG
- * <p/>
- * All rights reserved
- */
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * User entity
- @author Eric Wang
+ * @author Eric Wang
  **/
+@SuppressWarnings("unused")
 public class User {
     private String id;
     private String name;
@@ -19,8 +15,14 @@ public class User {
     private Set<Plan> plans = new HashSet<>();
 
     public User() {
+        // default constructor
     }
 
+    /**
+     * Constructor with user name
+     *
+     * @param name user name
+     */
     public User(String name) {
         this.name = name;
     }
@@ -33,6 +35,10 @@ public class User {
         this.plans = plans;
     }
 
+    /**
+     * Convenience method for bidirectional relation
+     * @param plan plan entity
+     */
     public void addPlan(Plan plan){
         plan.setUser(this);
         plans.add(plan);
@@ -64,8 +70,10 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         User user = (User) o;
 

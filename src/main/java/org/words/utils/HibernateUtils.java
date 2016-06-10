@@ -5,13 +5,16 @@ import org.hibernate.cfg.Configuration;
 
 
 /**
- * Created by Eric on 2016/3/11.
+ * Utils to hold sessionFactory single instance
  */
 public class HibernateUtils {
     private HibernateUtils(){}
 
     private static class SingletonWrapper {
+        @SuppressWarnings("deprecation")
         private static SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+
+        private SingletonWrapper() {}
     }
 
     public static SessionFactory getSessionFactory(){

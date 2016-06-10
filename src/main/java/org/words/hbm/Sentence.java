@@ -3,6 +3,9 @@ package org.words.hbm;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Sentence entity
+ */
 public class Sentence {
 	private String id;
     private int version;
@@ -16,6 +19,12 @@ public class Sentence {
 		// this form used by Hibernate
 	}
 
+    /**
+     * Constructor with english txt and chinese txt
+     *
+     * @param english english txt
+     * @param chinese chinese txt
+     */
 	public Sentence(String english, String chinese) {
 		// for application use, to create new events
         this.chinese = chinese;
@@ -85,12 +94,16 @@ public class Sentence {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         Sentence sentence = (Sentence) o;
 
-        if (english != null ? !english.equals(sentence.english) : sentence.english != null) return false;
+        //noinspection SimplifiableIfStatement
+        if (english != null ? !english.equals(sentence.english) : sentence.english != null)
+            return false;
         return !(chinese != null ? !chinese.equals(sentence.chinese) : sentence.chinese != null);
 
     }

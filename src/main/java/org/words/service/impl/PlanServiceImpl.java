@@ -8,7 +8,7 @@ import org.words.to.PlanTO;
 import org.words.utils.ConvertUtils;
 
 /**
- * Created by Eric on 2016/4/4.
+ * Plan service implementation
  */
 public class PlanServiceImpl implements PlanService {
 

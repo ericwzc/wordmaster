@@ -1,9 +1,4 @@
 package org.words.to;
-/**
- * @COPYRIGHT (C) 2016 Schenker AG
- * <p>
- * All rights reserved
- */
 
 import org.words.common.Status;
 
@@ -19,10 +14,12 @@ public class RecordTO extends AbstractTO{
     private SentenceTO sentence;
     private int counter;
 
+    @SuppressWarnings("unused")
     public int getCounter() {
         return counter;
     }
 
+    @SuppressWarnings("unused")
     public void setCounter(int counter) {
         this.counter = counter;
     }
@@ -43,10 +40,12 @@ public class RecordTO extends AbstractTO{
         this.version = version;
     }
 
+    @SuppressWarnings("unused")
     public Status getStatus() {
         return status;
     }
 
+    @SuppressWarnings("unused")
     public void setStatus(Status status) {
         this.status = status;
     }
@@ -69,9 +68,7 @@ public class RecordTO extends AbstractTO{
 
         RecordTO record = (RecordTO) o;
 
-        if (status != record.status)
-            return false;
-        return sentence.equals(record.sentence);
+        return status == record.status && sentence.equals(record.sentence);
     }
 
     @Override

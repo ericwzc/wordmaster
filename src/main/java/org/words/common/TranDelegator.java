@@ -11,13 +11,23 @@ import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 
 /**
- * Created by Eric on 2016/3/28.
+ * Simple transaction enhancement via byte code manipulation, no nested transaction support
  */
 public class TranDelegator {
     private static Transaction transaction = null;
 
+    private TranDelegator(){} //noinspection
+
+    /**
+     * Byte code intercept magic
+     * @param superMethod user method
+     * @param method original bean method
+     *
+     * @return return value from superMethod call
+     * @throws Exception
+     */
     @RuntimeType
-    public static Object intercept(@SuperCall Callable<?> superMethod, @Origin Method method) throws Exception {
+    public static Object intercept(@SuperCall Callable<?> superMethod, @Origin Method method) throws Exception {//NOSONAR
         boolean entry = false;
         Session session = HibernateUtils.getSessionFactory().getCurrentSession();
         if (transaction == null) {
@@ -26,18 +36,17 @@ public class TranDelegator {
         }
         try {
             Object returnVal = null;
-            if (method.getReturnType() != null) {
+            if (method.getReturnType() != null)
                 returnVal = superMethod.call();
-            }
+
             transaction.commit();
             return returnVal;
         } catch (Exception e) {
             transaction.rollback();
             throw new IllegalStateException(e);
         } finally {
-            if (entry) {
+            if (entry)
                 transaction = null;
-            }
         }
     }
 }

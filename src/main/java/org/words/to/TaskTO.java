@@ -1,8 +1,4 @@
-package org.words.to; /**
- * @COPYRIGHT (C) 2016 Schenker AG
- * <p/>
- * All rights reserved
- */
+package org.words.to;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -10,7 +6,7 @@ import java.util.Set;
 
 /**
  * Task entity
- @author Eric Wang
+ * @author Eric Wang
  **/
 public class TaskTO extends AbstractTO {
     private String id;
@@ -35,10 +31,12 @@ public class TaskTO extends AbstractTO {
         this.plan = plan;
     }
 
+    @SuppressWarnings("unused")
     public Date getDeadLine() {
         return deadLine;
     }
 
+    @SuppressWarnings("unused")
     public void setDeadLine(Date deadLine) {
         this.deadLine = deadLine;
     }
@@ -61,13 +59,15 @@ public class TaskTO extends AbstractTO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         TaskTO taskTO = (TaskTO) o;
 
-        if (deadLine != null ? !deadLine.equals(taskTO.deadLine) : taskTO.deadLine != null) return false;
-        return !(plan != null ? !plan.equals(taskTO.plan) : taskTO.plan != null);
+        return !(deadLine != null ? !deadLine.equals(taskTO.deadLine) : taskTO.deadLine != null) && !(plan != null ? !plan.equals(taskTO.plan) : taskTO.plan != null);
 
     }
 

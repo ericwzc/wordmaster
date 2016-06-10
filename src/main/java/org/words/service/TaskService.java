@@ -2,14 +2,19 @@ package org.words.service;
 
 import org.words.common.Transactional;
 import org.words.to.SentenceTO;
-import org.words.to.TaskTO;
 
 import java.util.List;
 
 /**
- * Created by Eric on 2016/3/17.
+ * Task service interface
  */
-public interface TaskService {
+public interface TaskService {//NOSONAR
+
+    /**
+     * Load setences for today
+     * @return list of sentence tos
+     */
+    @SuppressWarnings("unused")
     @Transactional
     List<SentenceTO> getSentences4Today();
 }

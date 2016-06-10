@@ -1,16 +1,11 @@
 package org.words.to;
-/**
- * @COPYRIGHT (C) 2016 Schenker AG
- * <p/>
- * All rights reserved
- */
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Word Entity
- @author Eric Wang
+ * @author Eric Wang
  **/
 public class WordTO extends AbstractTO {
     private String id;
@@ -18,8 +13,16 @@ public class WordTO extends AbstractTO {
     private int version;
     private String name;
 
-    public WordTO(){}
+    @SuppressWarnings("unused")
+    public WordTO(){//intentionally blank
+    }
 
+    /**
+     * Constructor with name set
+     *
+     * @param name word name
+     */
+    @SuppressWarnings("unused")
     public WordTO(String name){
         this.name = name;
     }
@@ -56,6 +59,12 @@ public class WordTO extends AbstractTO {
         this.version = version;
     }
 
+    /**
+     * Convenience method to set bidirectional relationship
+     *
+     * @param sentence sentence to
+     */
+    @SuppressWarnings("unused")
     public void addSentence(SentenceTO sentence){
         sentence.setWord(this);
         sentences.add(sentence);
@@ -63,8 +72,11 @@ public class WordTO extends AbstractTO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         WordTO wordTO = (WordTO) o;
 

@@ -1,8 +1,4 @@
-package org.words.hbm; /**
- * @COPYRIGHT (C) 2016 Schenker AG
- * <p/>
- * All rights reserved
- */
+package org.words.hbm;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -10,8 +6,9 @@ import java.util.Set;
 
 /**
  * Task entity
- @author Eric Wang
+ * @author Eric Wang
  **/
+@SuppressWarnings("unused")
 public class Task {
     private String id;
     private int version;
@@ -61,14 +58,14 @@ public class Task {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         Task task = (Task) o;
 
-        if (deadLine != null ? !deadLine.equals(task.deadLine) : task.deadLine != null) return false;
-        return !(plan != null ? !plan.equals(task.plan) : task.plan != null);
-
+        return !(deadLine != null ? !deadLine.equals(task.deadLine) : task.deadLine != null) && !(plan != null ? !plan.equals(task.plan) : task.plan != null);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package org.words.service.impl;
 
 import org.words.common.Transactional;
-import org.words.dao.SentenceDao;
 import org.words.dao.TaskDao;
 import org.words.hbm.Sentence;
 import org.words.hbm.Task;
@@ -14,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Eric on 2016/3/28.
+ * Task service implementation
  */
 public class TaskServiceImpl implements TaskService {
 

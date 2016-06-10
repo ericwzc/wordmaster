@@ -2,6 +2,9 @@ package org.words.to;
 
 import java.util.*;
 
+/**
+ * Sentence TO class
+ */
 public class SentenceTO extends AbstractTO implements Cloneable{
 	private String id;
     private int version;
@@ -15,6 +18,12 @@ public class SentenceTO extends AbstractTO implements Cloneable{
 		// this form used by Hibernate
 	}
 
+    /**
+     * Constructor set chinese, english text
+     *
+     * @param english english txt
+     * @param chinese chinese txt
+     */
 	public SentenceTO(String english, String chinese) {
 		// for application use, to create new events
         this.chinese = chinese;
@@ -33,10 +42,15 @@ public class SentenceTO extends AbstractTO implements Cloneable{
         return record;
     }
 
+    @SuppressWarnings("unused")
     public void setRecord(Set<RecordTO> record) {
         this.record = record;
     }
 
+    /**
+     * Add record
+     * @param recordTO record
+     */
     public void addRecord(RecordTO recordTO){
         this.record.add(recordTO);
     }
@@ -45,7 +59,8 @@ public class SentenceTO extends AbstractTO implements Cloneable{
 		return id;
 	}
 
-	private void setId(String id) {
+	@SuppressWarnings("unused")
+    private void setId(String id) {//NOSONAR
 		this.id = id;
 	}
 
@@ -69,6 +84,7 @@ public class SentenceTO extends AbstractTO implements Cloneable{
         this.english = english;
     }
 
+    @SuppressWarnings("unused")
     public void setChinese(String chinese) {
         this.chinese = chinese;
     }
@@ -81,12 +97,9 @@ public class SentenceTO extends AbstractTO implements Cloneable{
         this.word = word;
     }
 
-    public Object clone() {
-        try {
-            return super.clone();
-        } catch (CloneNotSupportedException e) {
-        }
-        return null;
+    @Override
+    public Object clone() throws CloneNotSupportedException {//NOSONAR
+        return super.clone();
     }
 
     @Override

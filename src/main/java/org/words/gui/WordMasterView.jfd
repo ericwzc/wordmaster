@@ -80,7 +80,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "studyButton"
 					"text": "Hint Mode"
-					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "studyButtonActionPerformed", true ) )
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "studyButtonMouseClicked", true ) )
 				} )
 				add( new FormComponent( "javax.swing.JToolBar$Separator" ) {
 					name: "separator1"
@@ -96,7 +96,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "listenBtn"
 					"text": "Listen Mode"
-					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "listenBtnActionPerformed", true ) )
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "listenBtnMouseClicked", true ) )
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
 					name: "newNum"

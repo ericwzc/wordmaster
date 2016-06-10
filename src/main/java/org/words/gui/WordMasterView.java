@@ -54,39 +54,6 @@ public class WordMasterView extends JPanel {
         listenBtn.setEnabled(false);
     }
 
-    private void studyButtonActionPerformed(ActionEvent e) {
-        if(t != null && t.isAlive())
-            t.interrupt();
-        learnPanel.setVisible(true);
-        reviewPanel.setVisible(false);
-        prevBtn.setEnabled(false);
-        nextBtn.setEnabled(false);
-        showAllBtn.setEnabled(false);
-
-        learnEnglish.setText(LOADING_PLEASE_WAIT);
-
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (tos.isEmpty())
-                    tos = ServiceRegistry.getServiceInstance(StudyService.class)
-                            .loadTasks(intValue(newNum.getText()), intValue(studiedNum.getText()));
-                learnEnglish.setText("");
-                if (tos.size() > 0) {
-                    newNum.setEnabled(false);
-                    studiedNum.setEnabled(false);
-                    setSentenceTO(tos.get(idx));
-                    prevBtn.setEnabled(true);
-                    nextBtn.setEnabled(true);
-                    showAllBtn.setEnabled(true);
-                }
-                else {
-                    learnEnglish.setText(NOTHING_TO_LEARN_REVIEW);
-                }
-            }
-        });
-    }
-
     public SentenceTO getSentenceTO() {
         return sentenceTO;
     }
@@ -259,7 +226,40 @@ public class WordMasterView extends JPanel {
         }
     }
 
-    private void listenBtnActionPerformed(ActionEvent e) {
+    private void studyButtonMouseClicked(MouseEvent e) {
+        if(t != null && t.isAlive())
+            t.interrupt();
+        learnPanel.setVisible(true);
+        reviewPanel.setVisible(false);
+        prevBtn.setEnabled(false);
+        nextBtn.setEnabled(false);
+        showAllBtn.setEnabled(false);
+
+        learnEnglish.setText(LOADING_PLEASE_WAIT);
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if (tos.isEmpty())
+                    tos = ServiceRegistry.getServiceInstance(StudyService.class)
+                            .loadTasks(intValue(newNum.getText()), intValue(studiedNum.getText()));
+                learnEnglish.setText("");
+                if (tos.size() > 0) {
+                    newNum.setEnabled(false);
+                    studiedNum.setEnabled(false);
+                    setSentenceTO(tos.get(idx));
+                    prevBtn.setEnabled(true);
+                    nextBtn.setEnabled(true);
+                    showAllBtn.setEnabled(true);
+                }
+                else {
+                    learnEnglish.setText(NOTHING_TO_LEARN_REVIEW);
+                }
+            }
+        });
+    }
+
+    private void listenBtnMouseClicked(MouseEvent e) {
         Random r = new Random(47);
         t = new Thread(new Runnable() {
             List<SentenceTO> tts;
@@ -363,7 +363,12 @@ public class WordMasterView extends JPanel {
 
             //---- studyButton ----
             studyButton.setText("Hint Mode");
-            studyButton.addActionListener(e -> studyButtonActionPerformed(e));
+            studyButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    studyButtonMouseClicked(e);
+                }
+            });
             toolBar1.add(studyButton);
             toolBar1.addSeparator();
 
@@ -380,7 +385,12 @@ public class WordMasterView extends JPanel {
 
             //---- listenBtn ----
             listenBtn.setText("Listen Mode");
-            listenBtn.addActionListener(e -> listenBtnActionPerformed(e));
+            listenBtn.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    listenBtnMouseClicked(e);
+                }
+            });
             toolBar1.add(listenBtn);
 
             //---- newNum ----

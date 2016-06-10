@@ -1,9 +1,4 @@
 package org.words.hbm;
-/**
- * @COPYRIGHT (C) 2016 Schenker AG
- * <p>
- * All rights reserved
- */
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -21,8 +16,14 @@ public class Meaning {
     private Set<Sentence> sentences = new HashSet<>();
 
     public Meaning() {
+        //use by hibernate
     }
 
+    /**
+     * Constructor set html text of meaning
+     * @param txt html txt
+     */
+    @SuppressWarnings("unused")
     public Meaning(String txt) {
         this.txt = txt;
     }
@@ -59,6 +60,11 @@ public class Meaning {
         this.txt = txt;
     }
 
+    /**
+     * Convenience for bidirectional relation
+     * @param sentence sentence entity
+     */
+    @SuppressWarnings("unused")
     public void addSentence(Sentence sentence) {
         sentence.setMeaning(this);
         sentences.add(sentence);

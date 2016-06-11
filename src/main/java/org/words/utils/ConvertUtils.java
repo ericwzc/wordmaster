@@ -41,7 +41,7 @@ public class ConvertUtils {
         }
     }
 
-    static <T> T convert(Object src, Class<T> tClass, Map map) throws IllegalAccessException, InstantiationException, ClassNotFoundException, NoSuchFieldException {
+    static <T> T convert(Object src, Class<T> tClass, Map map) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
         if (src == null) {
             return null;
         }
@@ -52,16 +52,20 @@ public class ConvertUtils {
         Class<?> srcClass = src.getClass();
         for (Field field : srcClass.getDeclaredFields()) {
             field.setAccessible(true);
-            Field dstField = tClass.getDeclaredField(field.getName());
-            dstField.setAccessible(true);
-            if (field.get(src) == null) {
-                dstField.set(result, null);
-            } else if (Set.class.isAssignableFrom(field.getType())) {
-                setSetField(field, dstField, src, result, map);
-            } else if (!field.get(src).getClass().getPackage().getName().equals(ORG_WORDS_HBM) && !field.get(src).getClass().getName().endsWith("TO")) {
-                dstField.set(result, field.get(src));
-            } else {
-                copy(src, result, field, dstField, map);
+            try {
+                Field dstField = tClass.getDeclaredField(field.getName());
+                dstField.setAccessible(true);
+                if (field.get(src) == null) {
+                    dstField.set(result, null);
+                } else if (Set.class.isAssignableFrom(field.getType())) {
+                    setSetField(field, dstField, src, result, map);
+                } else if (!field.get(src).getClass().getPackage().getName().equals(ORG_WORDS_HBM) && !field.get(src).getClass().getName().endsWith("TO")) {
+                    dstField.set(result, field.get(src));
+                } else {
+                    copy(src, result, field, dstField, map);
+                }
+            }catch (NoSuchFieldException nsf){
+               logger.info("no field found in target bean:{}" + nsf);
             }
         }
         return result;

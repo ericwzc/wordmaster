@@ -7,7 +7,6 @@ import org.words.dao.SentenceDao;
 import org.words.hbm.Record;
 import org.words.hbm.Sentence;
 import org.words.service.StudyService;
-import org.words.to.RecordTO;
 import org.words.to.SentenceTO;
 import org.words.utils.ConvertUtils;
 

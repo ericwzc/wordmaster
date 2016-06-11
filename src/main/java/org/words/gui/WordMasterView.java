@@ -13,6 +13,8 @@ import org.jdesktop.beansbinding.BeanProperty;
 import org.jdesktop.beansbinding.BindingGroup;
 import org.jdesktop.beansbinding.Bindings;
 import org.jdesktop.beansbinding.ELProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.words.factory.ServiceRegistry;
 import org.words.service.StudyService;
 import org.words.to.SentenceTO;
@@ -28,25 +30,49 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
 
 /**
+ * View class
  * @author Eric Wang
  */
-@SuppressWarnings ({ "UnusedParameters", "Convert2Lambda", "Convert2MethodRef", "FieldCanBeLocal" })
+@SuppressWarnings({"UnusedParameters", "Convert2Lambda", "Convert2MethodRef", "FieldCanBeLocal", "squid:S1612", "squid:S1213", "squid:S1948", "squid:S1199", "squid:S1192"})
 public class WordMasterView extends JPanel {
+    // class data
     private static final String LOADING_PLEASE_WAIT = "Loading, please wait...";
     private static final String NOTHING_TO_LEARN_REVIEW = "Nothing to learn/review!";
-    private SentenceTO sentenceTO = new SentenceTO();
-    private LinkedList<String> words = new LinkedList<>();
-    private List<SentenceTO> tos = new ArrayList<>();
-    private int idx = 0;
-    private final Object lock = new Object();
-    private String mp3Path = System.getProperty("user.home")+ File.separator+ "mp3" + File.separator;
-    private Thread t;
+    public static final String SEGOE_UI = "Segoe UI";
 
+    // instance data
+    private transient Logger logger = LoggerFactory.getLogger(WordMasterView.class);
+
+    private transient SentenceTO sentenceTO = new SentenceTO();
+    private transient LinkedList<String> words = new LinkedList<>();
+    private transient List<SentenceTO> tos = new ArrayList<>();
+    private transient int idx = 0;
+    private transient String mp3Path = System.getProperty("user.home")+ File.separator+ "mp3" + File.separator;
+    private transient ExecutorService exec = Executors.newSingleThreadExecutor(new ThreadFactory() {//NOSONAR
+        @SuppressWarnings("NullableProblems")
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(r);
+            t.setDaemon(true);
+            return t;
+        }
+    });
+
+    private transient Future<?> listenHook;
+
+    // constructor
+
+    /**
+     * Constructor
+     */
     public WordMasterView() {
         initComponents();
-//        bindingGroup.addBindingListener(new LoggingBindingListener(new JLabel()));
         learnPanel.setVisible(false);
         reviewPanel.setVisible(false);
         studyButton.setEnabled(false);
@@ -60,48 +86,60 @@ public class WordMasterView extends JPanel {
 
     public void setSentenceTO(SentenceTO sentenceTO) {
         SentenceTO old = this.sentenceTO;
-        sentenceTO = (SentenceTO) sentenceTO.clone();
-        hideKeyword(sentenceTO);
-        this.sentenceTO = sentenceTO;
-        firePropertyChange("sentenceTO", old, sentenceTO);
+        try {
+            SentenceTO newTo = (SentenceTO) sentenceTO.clone();
+            hideKeyword(newTo);
+            this.sentenceTO = newTo;
+            firePropertyChange("sentenceTO", old, newTo);
+        } catch (CloneNotSupportedException e) {
+            logger.error("clone error:{}", e);
+        }
     }
 
+    // private
     private void hideKeyword(SentenceTO sentenceTO) {
         String word = sentenceTO.getWord().getName();
         String english = sentenceTO.getEnglish();
         sentenceTO.setEnglish(english.replaceAll("(?i)\\b" + word.substring(0, (word.length() + 1) >> 1) + ".*?\\b", word.substring(0, 1) + "____"));
     }
 
-    private void nextButtonPressed(ActionEvent e) {
+    private void nextButtonPressed(ActionEvent e) {//NOSONAR squid:S1172
+        SentenceTO cur = tos.get(idx);
         meaningLabel.setText("");
-        synchronized (lock) {
-            upFamilarity(idx);
-            idx = (idx + 1) % tos.size();
-            setSentenceTO(tos.get(idx));
-        }
+        idx = (idx + 1) % tos.size();
+        setSentenceTO(tos.get(idx));
+        upFamilarity(cur);
     }
 
-    private void upFamilarity(final int idx){
-        SwingUtilities.invokeLater(new Runnable() {
+    private void upFamilarity(SentenceTO sentenceTO){
+        exec.execute(new Runnable() {//NOSONAR
             @Override
             public void run() {
-                ServiceRegistry.getServiceInstance(StudyService.class).familarityUp(tos.get(idx));
+                ServiceRegistry.getServiceInstance(StudyService.class).familarityUp(sentenceTO);
             }
         });
     }
 
-    private void prevButtonPressed(ActionEvent e) {
+    private void downFamilarity(SentenceTO sentenceTO){
+        exec.execute(new Runnable() {//NOSONAR
+            @Override
+            public void run() {
+                ServiceRegistry.getServiceInstance(StudyService.class).familarityDown(sentenceTO);
+            }
+        });
+    }
+    private void prevButtonPressed(ActionEvent e) {//NOSONAR squid:S1172
+        SentenceTO cur = tos.get(idx);
         meaningLabel.setText("");
-        synchronized (lock) {
-            upFamilarity(idx);
-            idx = (idx + tos.size() - 1) % tos.size();
-            setSentenceTO(tos.get(idx));
-        }
+        idx = (idx + tos.size() - 1) % tos.size();
+        setSentenceTO(tos.get(idx));
+        upFamilarity(cur);
     }
 
-    private void reviewBtnMouseClicked(MouseEvent e) {
-        if(t != null && t.isAlive())
-            t.interrupt();
+    private void reviewBtnMouseClicked(MouseEvent e) {//NOSONAR squid:S1172
+        if(listenHook != null && !listenHook.isDone())
+            listenHook.cancel(true);
+
         reviewPanel.setVisible(true);
         learnPanel.setVisible(false);
 
@@ -113,22 +151,14 @@ public class WordMasterView extends JPanel {
         revPrev.setEnabled(false);
         showAnswer.setEnabled(false);
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (tos.isEmpty())
-                    tos = ServiceRegistry.getServiceInstance(StudyService.class).loadTasks(100, 50);
-                if (!tos.isEmpty()) {
-                    updateReviewBoard();
-                    revNext.setEnabled(true);
-                    revPrev.setEnabled(true);
-                    showAnswer.setEnabled(true);
-                }
-                else {
-                    revEnglishLabel.setText(NOTHING_TO_LEARN_REVIEW);
-                }
-            }
-        });
+        if (!tos.isEmpty()) {
+            updateReviewBoard();
+            revNext.setEnabled(true);
+            revPrev.setEnabled(true);
+            showAnswer.setEnabled(true);
+        } else {
+            revEnglishLabel.setText(NOTHING_TO_LEARN_REVIEW);
+        }
     }
 
     private int intValue(String s){
@@ -136,6 +166,7 @@ public class WordMasterView extends JPanel {
         try {
             i = Integer.parseInt(s);
         }catch (NumberFormatException ignored){
+            logger.info("error in parsing number:{}", ignored);
         }
         return i;
     }
@@ -146,15 +177,15 @@ public class WordMasterView extends JPanel {
         SentenceTO to = tos.get(idx);
         revChineseLabel.setText(to.getChinese());
         revEnglishLabel.setText("");
-        String[] words = to.getEnglish().split("\\s+");
-        this.words = new LinkedList<>(Arrays.asList(words));
-        Collections.shuffle(Arrays.asList(words));
+        String[] wds = to.getEnglish().split("\\s+");
+        this.words = new LinkedList<>(Arrays.asList(wds));
+        Collections.shuffle(Arrays.asList(wds));
 
-        for(String word : words) {
+        for(String word : wds) {
             final JLabel label = new JLabel();
             label.setText(word);
             label.setBorder(BorderFactory.createLineBorder(Color.black));
-            label.setFont(new Font("Segoe UI", Font.PLAIN, 22));
+            label.setFont(new Font(SEGOE_UI, Font.PLAIN, 22));
             label.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -176,41 +207,49 @@ public class WordMasterView extends JPanel {
         updateReviewBoard();
     }
 
-    private void revPrevActionPerformed(ActionEvent e) {
+    private void revPrevActionPerformed(ActionEvent e) {//NOSONAR squid:S1172
         prevButtonPressed(e);
         updateReviewBoard();
     }
 
-    private void showAnswerActionPerformed(ActionEvent e) {
+    private void showAnswerActionPerformed(ActionEvent e) {//NOSONAR squid:S1172
         revEnglishLabel.setText(tos.get(idx).getEnglish());
         fragmentPanel.removeAll();
         fragmentPanel.repaint();
+        downFamilarity(tos.get(idx));
     }
 
-    private void showAllBtnActionPerformed(ActionEvent e) {
+    private void showAllBtnActionPerformed(ActionEvent e) {//NOSONAR squid:S1172
         learnEnglish.setText(tos.get(idx).getEnglish());
         meaningLabel.setText("<html>" + getSentenceTO().getMeaning().getTxt() + "</html>");
+        downFamilarity(tos.get(idx));
     }
 
-    private void loadBtnActionPerformed(ActionEvent e) {
+    private void loadBtnActionPerformed(ActionEvent e) {//NOSONAR squid:S1172
         newNum.setEnabled(false);
         studiedNum.setEnabled(false);
         loadBtn.setEnabled(false);
-        SwingUtilities.invokeLater(new Runnable() {
+
+        exec.execute(new Runnable() {//NOSONAR
             @Override
             public void run() {
                 if (tos.isEmpty())
                     tos = ServiceRegistry.getServiceInstance(StudyService.class)
                             .loadTasks(intValue(newNum.getText()), intValue(studiedNum.getText()));
-                studyButton.setEnabled(true);
-                reviewBtn.setEnabled(true);
-                listenBtn.setEnabled(true);
+                SwingUtilities.invokeLater(new Runnable() {//NOSONAR
+                                               @Override
+                                               public void run() {
+                                                   studyButton.setEnabled(true);
+                                                   reviewBtn.setEnabled(true);
+                                                   listenBtn.setEnabled(true);
+                                               }
+                                           });
             }
         });
     }
 
-    private void listenActionPerformed(ActionEvent e) {
-        SwingUtilities.invokeLater(new Runnable() {
+    private void listenActionPerformed(ActionEvent e) {//NOSONAR squid:S1172
+        exec.execute(new Runnable() {//NOSONAR
             @Override
             public void run() {
                 play(getSentenceTO().getWord().getName());
@@ -221,14 +260,15 @@ public class WordMasterView extends JPanel {
     private void play(String wordName) {
         try {
             new Player(new BufferedInputStream(new FileInputStream(mp3Path + wordName + ".mp3"))).play();
-        } catch (JavaLayerException e) {
-        } catch (FileNotFoundException e) {
+        } catch (JavaLayerException | FileNotFoundException e) {
+            logger.error("error during play:{}", e);
         }
     }
 
-    private void studyButtonMouseClicked(MouseEvent e) {
-        if(t != null && t.isAlive())
-            t.interrupt();
+    private void studyButtonMouseClicked(MouseEvent e) {//NOSONAR squid:S1172
+        if(listenHook != null && !listenHook.isDone())
+            listenHook.cancel(true);
+
         learnPanel.setVisible(true);
         reviewPanel.setVisible(false);
         prevBtn.setEnabled(false);
@@ -237,35 +277,24 @@ public class WordMasterView extends JPanel {
 
         learnEnglish.setText(LOADING_PLEASE_WAIT);
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (tos.isEmpty())
-                    tos = ServiceRegistry.getServiceInstance(StudyService.class)
-                            .loadTasks(intValue(newNum.getText()), intValue(studiedNum.getText()));
-                learnEnglish.setText("");
-                if (tos.size() > 0) {
-                    newNum.setEnabled(false);
-                    studiedNum.setEnabled(false);
-                    setSentenceTO(tos.get(idx));
-                    prevBtn.setEnabled(true);
-                    nextBtn.setEnabled(true);
-                    showAllBtn.setEnabled(true);
-                }
-                else {
-                    learnEnglish.setText(NOTHING_TO_LEARN_REVIEW);
-                }
-            }
-        });
+        learnEnglish.setText("");
+        if (!tos.isEmpty()) {
+            newNum.setEnabled(false);
+            studiedNum.setEnabled(false);
+            setSentenceTO(tos.get(idx));
+            prevBtn.setEnabled(true);
+            nextBtn.setEnabled(true);
+            showAllBtn.setEnabled(true);
+        } else {
+            learnEnglish.setText(NOTHING_TO_LEARN_REVIEW);
+        }
     }
 
-    private void listenBtnMouseClicked(MouseEvent e) {
-        Random r = new Random(47);
-        t = new Thread(new Runnable() {
-            List<SentenceTO> tts;
-            {
-                tts = Collections.unmodifiableList(tos);
-            }
+    private void listenBtnMouseClicked(MouseEvent e) {//NOSONAR squid:S1172
+        Random r = new Random();
+        listenHook = exec.submit(new Runnable() {
+            List<SentenceTO> tts = Collections.unmodifiableList(tos);
+            
             @Override
             public void run() {
                 try {
@@ -274,16 +303,15 @@ public class WordMasterView extends JPanel {
                         Thread.sleep(3000);
                     }
                 } catch (InterruptedException e1) {
+                    logger.info("interrupted:{}", e1);
+                    Thread.currentThread().interrupt();
                 }
             }
         });
-
-        t.setDaemon(true);
-        t.start();
     }
 
 
-    private void initComponents() {
+    private void initComponents() {//NOSONAR
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         learnPanel = new JPanel();
         learnChinese = new JLabel();

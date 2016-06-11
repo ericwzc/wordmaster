@@ -30,7 +30,11 @@ public class RecordDao extends BaseDao<Record> {
      */
     public List<Record> load2ReviewRecords(int num) {
         //noinspection unchecked
-        return currentSession().createQuery("select r FROM Record r join fetch r.sentence s join fetch s.word join fetch s.meaning where r.status=" + Status.STUDIED.ordinal() + " order by r.counter").setFirstResult(0).setMaxResults(num).list();
+        return currentSession().createQuery("select r FROM Record r " +
+                "join fetch r.sentence s " +
+                "join fetch s.word " +
+                "join fetch s.meaning " +
+                "where r.status=" + Status.STUDIED.ordinal() + " order by r.counter").setFirstResult(0).setMaxResults(num).list();
     }
 
     /**
@@ -40,7 +44,11 @@ public class RecordDao extends BaseDao<Record> {
      */
     public List<Record> loadNewRecords(){
         //noinspection unchecked
-        return currentSession().createQuery("select r FROM Record r join fetch r.sentence s join fetch s.word join fetch s.meaning where r.status=" + Status.NEW.ordinal()).list();
+        return currentSession().createQuery("select r FROM Record r " +
+                "join fetch r.sentence s " +
+                "join fetch s.word " +
+                "join fetch s.meaning " +
+                "where r.status=" + Status.NEW.ordinal()).list();
     }
 }
 

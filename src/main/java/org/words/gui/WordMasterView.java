@@ -422,13 +422,13 @@ public class WordMasterView extends JPanel {
             toolBar1.add(listenBtn);
 
             //---- newNum ----
-            newNum.setText("50");
+            newNum.setText("20");
             newNum.setToolTipText("N.O. of new words to learn");
             toolBar1.add(newNum);
             toolBar1.addSeparator();
 
             //---- studiedNum ----
-            studiedNum.setText("50");
+            studiedNum.setText("80");
             studiedNum.setToolTipText("N.O. of studied words to refresh");
             toolBar1.add(studiedNum);
             toolBar1.addSeparator();

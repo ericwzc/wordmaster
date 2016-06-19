@@ -221,7 +221,9 @@ public class WordMasterView extends JPanel {
 
     private void showAllBtnActionPerformed(ActionEvent e) {//NOSONAR squid:S1172
         learnEnglish.setText(tos.get(idx).getEnglish());
-        meaningLabel.setText("<html>" + getSentenceTO().getMeaning().getTxt() + "</html>");
+        meaningLabel.setText("<html>" +
+                getSentenceTO().getMeaning().getTxt().replaceAll("(?m)<span class='method-en'>", "<br/><span class='method-en'>")
+                + "</html>");
         downFamilarity(tos.get(idx));
     }
 

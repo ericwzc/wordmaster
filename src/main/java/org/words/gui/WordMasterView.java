@@ -30,10 +30,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.*;
 
 /**
  * View class
@@ -293,16 +290,18 @@ public class WordMasterView extends JPanel {
     }
 
     private void listenBtnMouseClicked(MouseEvent e) {//NOSONAR squid:S1172
-        Random r = new Random();
         listenHook = exec.submit(new Runnable() {
-            List<SentenceTO> tts = Collections.unmodifiableList(tos);
-            
+            List<SentenceTO> tts = new ArrayList<>(tos);
+
             @Override
             public void run() {
                 try {
+                    Collections.shuffle(tts);
                     while (!Thread.interrupted()) {
-                        play(tts.get(r.nextInt(tts.size())).getWord().getName());
-                        Thread.sleep(3000);
+                        for (SentenceTO sentenceTO : tts) {
+                            play(sentenceTO.getWord().getName());
+                            TimeUnit.SECONDS.sleep(3);
+                        }
                     }
                 } catch (InterruptedException e1) {
                     logger.info("interrupted:{}", e1);

@@ -24,16 +24,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.*;
 
 /**
  * View class
+ *
  * @author Eric Wang
  */
 @SuppressWarnings({"UnusedParameters", "Convert2Lambda", "Convert2MethodRef", "FieldCanBeLocal", "squid:S1612", "squid:S1213", "squid:S1948", "squid:S1199", "squid:S1192"})
@@ -50,17 +48,8 @@ public class WordMasterView extends JPanel {
     private transient LinkedList<String> words = new LinkedList<>();
     private transient List<SentenceTO> tos = new ArrayList<>();
     private transient int idx = 0;
-    private transient String mp3Path = System.getProperty("user.home")+ File.separator+ "mp3" + File.separator;
-    private transient ExecutorService exec = Executors.newSingleThreadExecutor(new ThreadFactory() {//NOSONAR
-        @SuppressWarnings("NullableProblems")
-        @Override
-        public Thread newThread(Runnable r) {
-            Thread t = new Thread(r);
-            t.setDaemon(true);
-            return t;
-        }
-    });
-
+    private transient String mp3Path = System.getProperty("user.home") + File.separator + "mp3" + File.separator;
+    private transient ExecutorService exec = Executors.newSingleThreadExecutor();
     private transient Future<?> listenHook;
 
     // constructor
@@ -108,7 +97,7 @@ public class WordMasterView extends JPanel {
         upFamilarity(cur);
     }
 
-    private void upFamilarity(SentenceTO sentenceTO){
+    private void upFamilarity(SentenceTO sentenceTO) {
         exec.execute(new Runnable() {//NOSONAR
             @Override
             public void run() {
@@ -117,7 +106,7 @@ public class WordMasterView extends JPanel {
         });
     }
 
-    private void downFamilarity(SentenceTO sentenceTO){
+    private void downFamilarity(SentenceTO sentenceTO) {
         exec.execute(new Runnable() {//NOSONAR
             @Override
             public void run() {
@@ -125,6 +114,7 @@ public class WordMasterView extends JPanel {
             }
         });
     }
+
     private void prevButtonPressed(ActionEvent e) {//NOSONAR squid:S1172
         SentenceTO cur = tos.get(idx);
         meaningLabel.setText("");
@@ -134,7 +124,7 @@ public class WordMasterView extends JPanel {
     }
 
     private void reviewBtnMouseClicked(MouseEvent e) {//NOSONAR squid:S1172
-        if(listenHook != null && !listenHook.isDone())
+        if (listenHook != null && !listenHook.isDone())
             listenHook.cancel(true);
 
         reviewPanel.setVisible(true);
@@ -158,17 +148,17 @@ public class WordMasterView extends JPanel {
         }
     }
 
-    private int intValue(String s){
+    private int intValue(String s) {
         int i = 0;
         try {
             i = Integer.parseInt(s);
-        }catch (NumberFormatException ignored){
+        } catch (NumberFormatException ignored) {
             logger.info("error in parsing number:{}", ignored);
         }
         return i;
     }
 
-    private void updateReviewBoard(){
+    private void updateReviewBoard() {
         fragmentPanel.removeAll();
 
         SentenceTO to = tos.get(idx);
@@ -178,7 +168,7 @@ public class WordMasterView extends JPanel {
         this.words = new LinkedList<>(Arrays.asList(wds));
         Collections.shuffle(Arrays.asList(wds));
 
-        for(String word : wds) {
+        for (String word : wds) {
             final JLabel label = new JLabel();
             label.setText(word);
             label.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -186,7 +176,7 @@ public class WordMasterView extends JPanel {
             label.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if(label.getText().equalsIgnoreCase(WordMasterView.this.words.getFirst())) {
+                    if (label.getText().equalsIgnoreCase(WordMasterView.this.words.getFirst())) {
                         WordMasterView.this.words.removeFirst();
                         String txt = revEnglishLabel.getText();
                         revEnglishLabel.setText(txt.isEmpty() ? txt + label.getText() : txt + " " + label.getText());
@@ -236,13 +226,13 @@ public class WordMasterView extends JPanel {
                     tos = ServiceRegistry.getServiceInstance(StudyService.class)
                             .loadTasks(intValue(newNum.getText()), intValue(studiedNum.getText()));
                 SwingUtilities.invokeLater(new Runnable() {//NOSONAR
-                                               @Override
-                                               public void run() {
-                                                   studyButton.setEnabled(true);
-                                                   reviewBtn.setEnabled(true);
-                                                   listenBtn.setEnabled(true);
-                                               }
-                                           });
+                    @Override
+                    public void run() {
+                        studyButton.setEnabled(true);
+                        reviewBtn.setEnabled(true);
+                        listenBtn.setEnabled(true);
+                    }
+                });
             }
         });
     }
@@ -257,15 +247,28 @@ public class WordMasterView extends JPanel {
     }
 
     private void play(String wordName) {
+        if(wordName == null)
+            return;
+        InputStream is = null;
+        BufferedInputStream bs = null;
         try {
-            new Player(new BufferedInputStream(new FileInputStream(mp3Path + wordName + ".mp3"))).play();
+            is = new FileInputStream(mp3Path + wordName + ".mp3");
+            bs = new BufferedInputStream(is);
+            new Player(bs).play();
         } catch (JavaLayerException | FileNotFoundException e) {
             logger.error("error during play:{}", e);
+        } finally {
+            if (bs != null) {
+                try {
+                    bs.close();
+                } catch (IOException ignore) {
+                }
+            }
         }
     }
 
     private void studyButtonMouseClicked(MouseEvent e) {//NOSONAR squid:S1172
-        if(listenHook != null && !listenHook.isDone())
+        if (listenHook != null && !listenHook.isDone())
             listenHook.cancel(true);
 
         learnPanel.setVisible(true);
@@ -295,10 +298,12 @@ public class WordMasterView extends JPanel {
 
             @Override
             public void run() {
+                Collections.shuffle(tts);
                 try {
-                    Collections.shuffle(tts);
                     while (!Thread.interrupted()) {
                         for (SentenceTO sentenceTO : tts) {
+                            if (Thread.interrupted())
+                                break;
                             play(sentenceTO.getWord().getName());
                             TimeUnit.SECONDS.sleep(3);
                         }
@@ -311,6 +316,11 @@ public class WordMasterView extends JPanel {
         });
     }
 
+
+
+    public void shutDown() {
+        exec.shutdownNow();
+    }
 
     private void initComponents() {//NOSONAR
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -341,14 +351,14 @@ public class WordMasterView extends JPanel {
 
         //======== this ========
         setLayout(new FormLayout(
-            "pref:grow, $lcgap, default",
-            "fill:default, $pgap, pref, $lgap, default"));
+                "pref:grow, $lcgap, default",
+                "fill:default, $pgap, pref, $lgap, default"));
 
         //======== learnPanel ========
         {
             learnPanel.setLayout(new FormLayout(
-                "center:default:grow, $lcgap, default",
-                "2*(default, $pgap), 2*(default, $lgap), default"));
+                    "center:default:grow, $lcgap, default",
+                    "2*(default, $pgap), 2*(default, $lgap), default"));
             learnPanel.add(learnChinese, CC.xy(1, 1, CC.CENTER, CC.DEFAULT));
 
             //---- learnEnglish ----
@@ -360,8 +370,8 @@ public class WordMasterView extends JPanel {
             //======== learnNavPanel ========
             {
                 learnNavPanel.setLayout(new FormLayout(
-                    "pref:grow, $lcgap, default:grow, 2*($lcgap, default)",
-                    "default"));
+                        "pref:grow, $lcgap, default:grow, 2*($lcgap, default)",
+                        "default"));
 
                 //---- prevBtn ----
                 prevBtn.setText("<");
@@ -444,8 +454,8 @@ public class WordMasterView extends JPanel {
         //======== reviewPanel ========
         {
             reviewPanel.setLayout(new FormLayout(
-                "center:default:grow, $lcgap, default",
-                "3*(default, $pgap), default"));
+                    "center:default:grow, $lcgap, default",
+                    "3*(default, $pgap), default"));
             reviewPanel.add(revChineseLabel, CC.xy(1, 1));
 
             //---- revEnglishLabel ----
@@ -462,8 +472,8 @@ public class WordMasterView extends JPanel {
             //======== revNavPanel ========
             {
                 revNavPanel.setLayout(new FormLayout(
-                    "3*(default, $lcgap), default",
-                    "default"));
+                        "3*(default, $lcgap), default",
+                        "default"));
 
                 //---- revPrev ----
                 revPrev.setText("<");
@@ -487,11 +497,11 @@ public class WordMasterView extends JPanel {
         //---- bindings ----
         bindingGroup = new BindingGroup();
         bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this, ELProperty.create("${sentenceTO.chinese}"),
-            learnChinese, BeanProperty.create("text"), "chineseLabel"));
+                this, ELProperty.create("${sentenceTO.chinese}"),
+                learnChinese, BeanProperty.create("text"), "chineseLabel"));
         bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this, ELProperty.create("${sentenceTO.english}"),
-            learnEnglish, BeanProperty.create("text"), "englishLabel"));
+                this, ELProperty.create("${sentenceTO.english}"),
+                learnEnglish, BeanProperty.create("text"), "englishLabel"));
         bindingGroup.bind();
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }

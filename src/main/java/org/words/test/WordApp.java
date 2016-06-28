@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.words.gui.WordMasterView;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * Word App entry class, Swing GUI
@@ -31,7 +33,13 @@ public class WordApp {
                 try {
                     JFrame frame = new JFrame("WordMaster");
                     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                    JPanel jPanel = new WordMasterView();
+                    WordMasterView jPanel = new WordMasterView();
+                    frame.addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosed(WindowEvent e) {
+                           jPanel.shutDown();
+                        }
+                    });
                     frame.add(jPanel);
                     frame.pack();
                     frame.setVisible(true);

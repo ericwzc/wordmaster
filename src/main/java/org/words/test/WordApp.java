@@ -31,9 +31,8 @@ public class WordApp {
      */
     @SuppressWarnings("Convert2Lambda")
     public static void main(String[] args) {
-        JPanel jPanel = new WordMasterView();
         Injector injector = Guice.createInjector(new DbModule(), new ServiceModule());
-        injector.injectMembers(jPanel);
+        WordMasterView jPanel = injector.getInstance(WordMasterView.class);
 
         SwingUtilities.invokeLater(new Runnable() {//NOSONAR
             @Override

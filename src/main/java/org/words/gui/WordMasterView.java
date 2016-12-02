@@ -4,6 +4,7 @@
 
 package org.words.gui;
 
+import com.google.inject.Inject;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import javazoom.jl.decoder.JavaLayerException;
@@ -15,7 +16,6 @@ import org.jdesktop.beansbinding.Bindings;
 import org.jdesktop.beansbinding.ELProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.words.factory.ServiceRegistry;
 import org.words.service.StudyService;
 import org.words.to.SentenceTO;
 
@@ -42,6 +42,9 @@ public class WordMasterView extends JPanel {
     public static final String SEGOE_UI = "Segoe UI";
 
     // instance data
+    @Inject
+    private StudyService studyService;
+
     private transient Logger logger = LoggerFactory.getLogger(WordMasterView.class);
 
     private transient SentenceTO sentenceTO = new SentenceTO();
@@ -101,7 +104,7 @@ public class WordMasterView extends JPanel {
         exec.execute(new Runnable() {//NOSONAR
             @Override
             public void run() {
-                ServiceRegistry.getServiceInstance(StudyService.class).familarityUp(sentenceTO);
+                studyService.familarityUp(sentenceTO);
             }
         });
     }
@@ -110,7 +113,7 @@ public class WordMasterView extends JPanel {
         exec.execute(new Runnable() {//NOSONAR
             @Override
             public void run() {
-                ServiceRegistry.getServiceInstance(StudyService.class).familarityDown(sentenceTO);
+                studyService.familarityDown(sentenceTO);
             }
         });
     }
@@ -223,8 +226,7 @@ public class WordMasterView extends JPanel {
             @Override
             public void run() {
                 if (tos.isEmpty())
-                    tos = ServiceRegistry.getServiceInstance(StudyService.class)
-                            .loadTasks(intValue(newNum.getText()), intValue(studiedNum.getText()));
+                    tos = studyService .loadTasks(intValue(newNum.getText()), intValue(studiedNum.getText()));
                 SwingUtilities.invokeLater(new Runnable() {//NOSONAR
                     @Override
                     public void run() {
@@ -315,7 +317,6 @@ public class WordMasterView extends JPanel {
             }
         });
     }
-
 
 
     public void shutDown() {

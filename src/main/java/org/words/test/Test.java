@@ -1,22 +1,5 @@
 package org.words.test;
 
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.words.dao.WordDao;
-import org.words.hbm.*;
-import org.words.utils.HibernateUtils;
-
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Created by Eric on 2016/3/11.
  */

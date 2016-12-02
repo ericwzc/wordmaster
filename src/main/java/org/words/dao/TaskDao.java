@@ -1,5 +1,6 @@
 package org.words.dao;
 
+import com.google.inject.Singleton;
 import org.words.hbm.Task;
 
 import java.util.Date;
@@ -7,6 +8,7 @@ import java.util.Date;
 /**
  * Task dao class
  */
+@Singleton
 public class TaskDao extends BaseDao<Task> {
 
     /**

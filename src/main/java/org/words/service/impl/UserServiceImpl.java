@@ -1,5 +1,6 @@
 package org.words.service.impl;
 
+import com.google.inject.Inject;
 import org.words.common.Transactional;
 import org.words.dao.UserDao;
 import org.words.hbm.User;
@@ -12,8 +13,9 @@ import org.words.utils.ConvertUtils;
  */
 public class UserServiceImpl implements UserService{
 
-    private UserDao userDao = new UserDao();
-
+    @Inject
+    UserDao userDao;
+                
     @Transactional
     @Override
     public void saveUser(UserTO userTO) {

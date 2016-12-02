@@ -1,5 +1,6 @@
 package org.words.dao;
 
+import com.google.inject.Singleton;
 import org.words.hbm.Sentence;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
  * Sentence dao class
  */
 @SuppressWarnings("all")
+@Singleton
 public class SentenceDao extends BaseDao<Sentence> {
     /**
      * Get unstudied sentences of the specified limit

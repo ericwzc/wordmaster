@@ -1,5 +1,6 @@
 package org.words.service.impl;
 
+import com.google.inject.Inject;
 import org.words.common.Status;
 import org.words.common.Transactional;
 import org.words.dao.RecordDao;
@@ -20,8 +21,16 @@ import java.util.List;
  **/
 public class StudyServiceImpl implements StudyService {
 
-    private SentenceDao sentenceDao = new SentenceDao();
-    private RecordDao recordDao = new RecordDao();
+    @Inject
+    SentenceDao sentenceDao;
+    @Inject
+    RecordDao recordDao;
+
+    @Inject
+    public StudyServiceImpl(SentenceDao sentenceDao, RecordDao recordDao) {
+        this.sentenceDao = sentenceDao;
+        this.recordDao = recordDao;
+    }
 
     @Transactional
     @Override

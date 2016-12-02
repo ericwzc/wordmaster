@@ -1,5 +1,6 @@
 package org.words.service.impl;
 
+import com.google.inject.Inject;
 import org.words.common.Transactional;
 import org.words.dao.TaskDao;
 import org.words.hbm.Sentence;
@@ -17,7 +18,8 @@ import java.util.List;
  */
 public class TaskServiceImpl implements TaskService {
 
-    private TaskDao taskDao = new TaskDao();
+    @Inject
+    TaskDao taskDao;
 
     @Transactional
     @Override

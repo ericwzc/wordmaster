@@ -1,10 +1,12 @@
 package org.words.dao;
 
+import com.google.inject.Singleton;
 import org.words.hbm.Plan;
 
 /**
  * Plan dao class
  */
+@Singleton
 public class PlanDao extends BaseDao<Plan> {
     /**
      * Get plan for specified user

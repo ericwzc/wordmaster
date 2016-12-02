@@ -1,5 +1,6 @@
 package org.words.service.impl;
 
+import com.google.inject.Inject;
 import org.words.common.Transactional;
 import org.words.dao.PlanDao;
 import org.words.hbm.Plan;
@@ -12,12 +13,13 @@ import org.words.utils.ConvertUtils;
  */
 public class PlanServiceImpl implements PlanService {
 
-    private PlanDao planDao = new PlanDao();
-
+    @Inject
+    private PlanDao planDao;
+                       
     @Transactional
     @Override
     public PlanTO getPlan(String userName) {
         Plan plan = planDao.getPlan(userName);
         return ConvertUtils.convert(plan, PlanTO.class);
-    }
+    }           
 }

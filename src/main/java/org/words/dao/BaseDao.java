@@ -1,7 +1,8 @@
 package org.words.dao;
 
+import com.google.inject.Inject;
 import org.hibernate.Session;
-import org.words.utils.HibernateUtils;
+import org.hibernate.SessionFactory;
 
 import java.io.Serializable;
 
@@ -11,8 +12,12 @@ import java.io.Serializable;
  * @param <T> Entity type
  */
 public class BaseDao<T> {
+
+    @Inject
+    SessionFactory sessionFactory;
+
     protected Session currentSession(){
-        return HibernateUtils.getSessionFactory().getCurrentSession();
+        return sessionFactory.getCurrentSession();
     }
 
     /**

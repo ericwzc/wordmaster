@@ -1,5 +1,6 @@
 package org.words.dao;
 
+import com.google.inject.Singleton;
 import org.words.common.Status;
 import org.words.hbm.Record;
 
@@ -10,6 +11,7 @@ import java.util.List;
  *
  * @author Eric Wang
  **/
+@Singleton
 public class RecordDao extends BaseDao<Record> {
 
     /**

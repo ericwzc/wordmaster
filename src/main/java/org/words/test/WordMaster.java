@@ -7,23 +7,8 @@ package org.words.test;
  * @version:V1.0
  */
 
-import org.words.dao.WordDao;
-import org.words.factory.ServiceRegistry;
-import org.words.hbm.Meaning;
-import org.words.hbm.Sentence;
-import org.words.hbm.Word;
-import org.words.service.UserService;
-import org.words.to.PlanTO;
-import org.words.to.UserTO;
-import org.words.utils.HibernateUtils;
-
-import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;
-import java.util.Date;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WordMaster {

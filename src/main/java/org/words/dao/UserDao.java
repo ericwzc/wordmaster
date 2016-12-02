@@ -1,10 +1,12 @@
 package org.words.dao;
 
+import com.google.inject.Singleton;
 import org.words.hbm.User;
 
 /**
  * User dao class
  */
+@Singleton
 public class UserDao extends BaseDao<User>{
     /**
      * Get user by name

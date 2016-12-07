@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.org.words.hbm">
+
+    <class name="Sentence" table="SENTENCES">
+        <id name="id" type="string" column="SENTENCE_ID">
+            <generator class="uuid"/>
+        </id>
+        <version name="version" access="field" column="OBJ_VERSION" />
+        <property name="english" type="string" column="ENGLISH" not-null="true"/>
+        <property name="chinese" type="string" column="CHINESE" not-null="true"/>
+
+        <set name="record" inverse="true">
+            <key column="SENTENCE_ID"/>
+            <one-to-many class="Record"/>
+        </set>
+
+        <many-to-one name="word" class="Word" column="WORD_ID" not-null="true"/>
+        <many-to-one name="meaning" class="Meaning" column="MEANING_ID" not-null="true"/>
+        <!--<join table="TASKS_SENTENCES" optional="true">-->
+            <!--<key column="SENTENCE_ID"/>-->
+            <!--<many-to-one name="task" column="TASK_ID" not-null="true" />-->
+        <!--</join>-->
+    </class>
+
+    <!--<class name="Plan" table="PLANS" dynamic-update="true">-->
+        <!--<id name="id" type="string" column="PLAN_ID">-->
+            <!--<generator class="uuid"/>-->
+        <!--</id>-->
+        <!--<version name="version" access="field" column="OBJ_VERSION" />-->
+        <!--<property name="startDate" type="date" column="STARTDATE" not-null="true"/>-->
+        <!--<property name="number" type="int" column="NUMBER" not-null="true"/>-->
+
+        <!--<set table="PLANS_TASKS" name="tasks" inverse="true" cascade="save-update, delete">-->
+            <!--<key column="PLAN_ID"/>-->
+            <!--<many-to-many class="Task" column="TASK_ID" unique="true"/>-->
+        <!--</set>-->
+
+        <!--&lt;!&ndash; bidirectional many to one (optional) &ndash;&gt;-->
+        <!--<join table="PLANS_USERS" optional="true">-->
+            <!--<key column="PLAN_ID"/>-->
+            <!--<many-to-one name="user" column="USER_ID" not-null="true" />-->
+        <!--</join>-->
+
+    <!--</class>-->
+
+    <class name="Word" table="WORDS">
+        <id name="id" type="string" column="WORD_ID">
+            <generator class="uuid"/>
+        </id>
+        <version name="version" access="field" column="OBJ_VERSION" />
+        <property name="name" type="string" column="NAME" not-null="true"/>
+        <set name="sentences" inverse="true" cascade="save-update">
+            <key column="WORD_ID" />
+            <one-to-many class="Sentence" />
+        </set>
+    </class>
+
+    <class name="Meaning" table="MEANINGS">
+        <id name="id" type="string" column="MEANING_ID">
+            <generator class="uuid"/>
+        </id>
+        <version name="version" access="field" column="OBJ_VERSION" />
+        <property name="txt"  type="string" column="TXT" not-null="true" length="1000"/>
+        <set name="sentences" inverse="true" cascade="save-update">
+            <key column="MEANING_ID"></key>
+            <one-to-many class="Sentence" />
+        </set>
+    </class>
+
+    <!--<class name="User" table="USERS">-->
+        <!--<id name="id" type="string" column="USER_ID">-->
+            <!--<generator class="uuid"/>-->
+        <!--</id>-->
+        <!--<version name="version" access="field" column="OBJ_VERSION"/>-->
+        <!--<property name="name" type="string" column="NAME"/>-->
+        <!--&lt;!&ndash; bidirectional one to many (optional) &ndash;&gt;-->
+        <!--<set name="plans" table="PLANS_USERS" inverse="true" cascade="save-update, delete">-->
+            <!--<key column="USER_ID"/>-->
+            <!--<many-to-many column="PLAN_ID" class="Plan" unique="true"/>-->
+        <!--</set>-->
+    <!--</class>-->
+
+    <!--<class name="Task" table="TASKS">-->
+        <!--<id name="id" type="string" column="TASK_ID">-->
+            <!--<generator class="uuid"/>-->
+        <!--</id>-->
+        <!--<version name="version" type="int" access="field" column="OBJ_VERSION"/>-->
+        <!--<property name="deadLine" type="date" column="DEADLINE" not-null="true" />-->
+
+        <!--<set name="sentences" table="TASKS_SENTENCES" inverse="true">-->
+            <!--<key column="TASK_ID" />-->
+            <!--<many-to-many column="SENTENCE_ID" class="Sentence" unique="true"/>-->
+        <!--</set>-->
+
+        <!--&lt;!&ndash;bidirectional one to many optional&ndash;&gt;-->
+        <!--<join table="PLANS_TASKS" optional="true">-->
+            <!--<key column="TASK_ID" />-->
+            <!--<many-to-one name="plan" column="PLAN_ID" class="Plan" not-null="true"/>-->
+        <!--</join>-->
+    <!--</class>-->
+
+    <class name="Record" table="RECORDS">
+        <id name="id" type="string" column="RECORD_ID">
+            <generator class="uuid"/>
+        </id>
+        <version name="version" type="int" access="field" column="OBJ_VERSION"/>
+        <property name="status" column="STATUS">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">org.org.words.common.Status</param>
+            </type>
+        </property>
+        <property name="counter" type="int" column="COUNTER"/>
+        <many-to-one name="sentence" column="SENTENCE_ID" not-null="true" unique="true"/>
+    </class>
+
+</hibernate-mapping>

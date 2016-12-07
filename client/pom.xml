@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>wordmaster</artifactId>
+        <groupId>org.free</groupId>
+        <version>1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>client</artifactId>
+    <packaging>jar</packaging>
+
+    <name>client</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.free</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javazoom</groupId>
+            <artifactId>jlayer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jgoodie</groupId>
+            <artifactId>beansbinding</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jgoodie</groupId>
+            <artifactId>jfd-annotations</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jgoodie</groupId>
+            <artifactId>jfd-loader</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jgoodie</groupId>
+            <artifactId>jgoodies-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jgoodie</groupId>
+            <artifactId>jgoodies-forms</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jgoodie</groupId>
+            <artifactId>jgoodies-uif-lite</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jgoodie</groupId>
+            <artifactId>swing-layout</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jgoodie</groupId>
+            <artifactId>TableLayout</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+        </dependency>
+    </dependencies>
+</project>

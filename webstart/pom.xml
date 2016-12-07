@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>wordmaster</artifactId>
+        <groupId>org.free</groupId>
+        <version>1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>webstart</artifactId>
+    <packaging>war</packaging>
+    <name>webstart Maven Webapp</name>
+    <url>http://maven.apache.org</url>
+    <dependencies>
+        <dependency>
+            <groupId>org.free</groupId>
+            <artifactId>client</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>webstart</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jarsigner-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <id>sign</id>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <archiveDirectory>${project.build.directory}/lib</archiveDirectory>
+                    <keystore>${project.basedir}/eric.jks</keystore>
+                    <alias>eric</alias>
+                    <storepass>changeit</storepass>
+                    <keypass>changeit</keypass>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>
+</project>

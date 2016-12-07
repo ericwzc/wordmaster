@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="" href="wordmaster.jnlp">
+    <information>
+        <title></title>
+        <vendor></vendor>
+        <homepage href="http://localhost:8989/wordmaster" />
+    </information>
+
+    <update check="always" policy="prompt-update"/>
+    <security>
+        <all-permissions/>
+    </security>
+    <offline-allowed/>
+    <resources>
+        <j2se version="1.7+" href="http://java.sun.com/products/autodl/j2se" java-vm-args="-Dorg.jpedal.jai=true"/>
+        <jar href="client-1.0.jar" />
+    </resources>
+    <application-desc main-class="org.words.test.WordApp" />
+</jnlp>

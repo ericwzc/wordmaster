@@ -1,0 +1,15 @@
+dependencies {
+    compile group: 'com.google.inject', name: 'guice', version: '1.0'
+    compile group: 'javazoom', name: 'jlayer', version: '1.0.1'
+    compile group: 'com.jgoodie', name: 'beansbinding', version: '1.0'
+    compile group: 'com.jgoodie', name: 'jfd-annotations', version: '1.0'
+    compile group: 'com.jgoodie', name: 'jfd-loader', version: '1.0'
+    compile group: 'com.jgoodie', name: 'jgoodies-common', version: '1.0'
+    compile group: 'com.jgoodie', name: 'jgoodies-forms', version: '1.0'
+    compile group: 'com.jgoodie', name: 'jgoodies-uif-lite', version: '1.0'
+    compile group: 'com.jgoodie', name: 'swing-layout', version: '1.0'
+    compile group: 'com.jgoodie', name: 'TableLayout', version: '1.0'
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.0'
+
+    compile project(':common')
+}

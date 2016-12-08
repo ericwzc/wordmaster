@@ -1,0 +1,18 @@
+subprojects {
+    apply plugin : 'java'
+    version = 1.0
+    group = "com.eric"
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    jar {
+        sourceCompatibility = '1.8'
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+}

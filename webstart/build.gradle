@@ -1,0 +1,12 @@
+
+apply plugin: 'war'
+
+dependencies {
+    compile project(':client')
+}
+
+assemble {
+    doFirst {
+        ant.echo('hello from ant')
+    }
+}
